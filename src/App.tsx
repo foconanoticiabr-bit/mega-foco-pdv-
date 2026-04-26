@@ -11,6 +11,7 @@ import {
   Users, 
   Clock, 
   LineChart, 
+  BarChart3,
   Package, 
   ChevronRight, 
   Check,
@@ -239,7 +240,7 @@ export default function App() {
       {/* Hero */}
       <section className="pt-60 pb-40 px-4 flex flex-col items-center text-center relative overflow-hidden">
         {/* Glow effect */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/20 blur-[150px] rounded-full pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#c5a059]/5 blur-[150px] rounded-full pointer-events-none"></div>
         
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
@@ -441,7 +442,7 @@ export default function App() {
 
       {/* Pricing Table */}
       <section id="pricing" className="py-40 px-4 bg-[#05080d] overflow-hidden relative border-y border-white/5">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-blue-900/10 blur-[200px] rounded-full pointer-events-none"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-[#c5a059]/5 blur-[200px] rounded-full pointer-events-none"></div>
           <div className="max-w-7xl mx-auto relative z-10">
              <div className="text-center mb-32">
                 <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-[#c5a059] mb-6 inline-block italic border-b border-[#c5a059] pb-2">Assinaturas</h3>
@@ -470,7 +471,7 @@ export default function App() {
                       </div>
                     )}
                     {p.badge && (
-                      <div className="absolute -top-5 left-1/2 -translate-x-1/2 px-10 py-3 bg-white text-[#0a0e17] text-xs font-black rounded-full uppercase tracking-widest shadow-2xl italic">
+                      <div className="absolute -top-5 left-1/2 -translate-x-1/2 px-10 py-3 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] text-xs font-black rounded-full uppercase tracking-widest shadow-2xl italic">
                         {p.badge}
                       </div>
                     )}
@@ -713,7 +714,7 @@ export default function App() {
   const Dashboard = () => (
     <div className="flex h-screen bg-[#05080d] font-display relative overflow-hidden">
       {/* Background glow */}
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-900/10 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#c5a059]/5 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
       
       {/* Sidebar Desktop */}
       <aside className="hidden lg:flex w-80 bg-[#05080d] text-white flex-col p-8 shrink-0 overflow-y-auto custom-scrollbar border-r border-white/5 shadow-2xl">
@@ -731,7 +732,7 @@ export default function App() {
               <p className="text-[10px] font-bold uppercase text-white/20 tracking-[0.4em] mb-6 ml-2 italic">Principal</p>
               <nav className="space-y-3">
                 {[
-                  { id: 'dashboard', icon: <LineChart className="w-5 h-5" />, label: 'Dashboard' },
+                  { id: 'dashboard', icon: <LineChart className="w-5 h-5" />, label: 'Panorama Elite' },
                   { id: 'pdv', icon: <ShoppingBag className="w-5 h-5" />, label: 'Executivo (PDV)' },
                   { id: 'comandas', icon: <ClipboardList className="w-5 h-5" />, label: 'Comandas' },
                 ].map((item) => (
@@ -775,7 +776,7 @@ export default function App() {
                 {[
                   { id: 'agenda', icon: <Calendar className="w-5 h-5" />, label: 'Reservas' },
                   { id: 'finance', icon: <DollarSign className="w-5 h-5" />, label: 'Capital' },
-                  { id: 'ponto', icon: <Clock className="w-5 h-5" />, label: 'Ponto RH' },
+                  { id: 'ponto', icon: <Clock className="w-5 h-5" />, label: 'Relojoeiro / RH' },
                   { id: 'vales', icon: <CreditCard className="w-5 h-5" />, label: 'Protocolos' },
                 ].map((item) => (
                   <button
@@ -795,7 +796,7 @@ export default function App() {
               <p className="text-[10px] font-bold uppercase text-white/20 tracking-[0.4em] mb-6 ml-2 italic">Inteligência Luxo</p>
               <nav className="space-y-3">
                 {[
-                  { id: 'config', icon: <Settings className="w-5 h-5" />, label: 'Setup Loja' },
+                  { id: 'config', icon: <Settings className="w-5 h-5" />, label: 'Arquitetura' },
                   { id: 'solutions', icon: <QrCode className="w-5 h-5" />, label: 'PIX / Elite' },
                   { id: 'reports', icon: <LineChart className="w-5 h-5" />, label: 'Relatórios' },
                 ].map((item) => (
@@ -816,7 +817,7 @@ export default function App() {
               <p className="text-[10px] font-bold uppercase text-white/20 tracking-[0.4em] mb-6 ml-2 italic">Influência</p>
               <nav className="space-y-3">
                 {[
-                  { id: 'crm', icon: <Users className="w-5 h-5" />, label: 'CRM / Leads' },
+                  { id: 'crm', icon: <Users className="w-5 h-5" />, label: 'Dossiê Elite' },
                   { id: 'whatsapp', icon: <MessageSquare className="w-5 h-5" />, label: 'Whats App' },
                   { id: 'nfe', icon: <FileText className="w-5 h-5" />, label: 'Protocolo NF-e' },
                 ].map((item) => (
@@ -1000,11 +1001,13 @@ export default function App() {
                  {currentSection === 'clients' && <Clientes />}
                  {currentSection === 'ponto' && <RH />}
                  {currentSection === 'vales' && (
-                   <div className="bg-white/5 p-16 rounded-[3rem] border border-white/10 flex flex-col items-center justify-center text-center luxury-gradient">
-                      <CreditCard className="w-16 h-16 text-[#c5a059]/40 mb-8" />
-                      <h3 className="text-3xl font-serif font-black uppercase italic tracking-tighter gold-text">Gestão de Vales</h3>
-                      <p className="text-white/30 font-bold max-w-xs mt-4 uppercase text-[10px] tracking-[0.3em]">Controle o fluxo de caixa pessoal da equipe com exclusividade</p>
-                   </div>
+                    <div className="luxury-card p-16 border-white/5 flex flex-col items-center justify-center text-center luxury-gradient">
+                       <div className="w-24 h-24 bg-white/5 text-[#c5a059] rounded-[2.5rem] border border-white/10 flex items-center justify-center mb-8">
+                         <CreditCard className="w-10 h-10" />
+                       </div>
+                       <h3 className="text-4xl font-serif font-black uppercase italic tracking-tighter gold-text">Gestão de Vales Elite</h3>
+                       <p className="text-white/30 font-bold max-w-xs mt-4 uppercase text-[10px] tracking-[0.3em] italic">Engenharia de fluxo transacional para capital humano</p>
+                    </div>
                  )}
                  {currentSection === 'config' && (
                    <div className="luxury-card p-12 border-white/5 luxury-gradient">
@@ -1031,10 +1034,15 @@ export default function App() {
                    </div>
                  )}
                  {currentSection === 'reports' && (
-                    <div className="flex flex-col items-center justify-center py-40 text-center opacity-30">
-                      <FileText className="w-16 h-16 mb-4" />
-                      <h2 className="text-2xl font-black uppercase tracking-tighter">Relatórios Avançados</h2>
-                      <p className="text-sm font-bold">Gerando BI e Inteligência de Negócio...</p>
+                    <div className="flex flex-col items-center justify-center py-56 text-center luxury-card luxury-gradient border-white/5 px-20">
+                      <div className="w-24 h-24 bg-white/5 text-[#c5a059] rounded-[2.5rem] border border-white/10 flex items-center justify-center mb-10">
+                        <BarChart3 className="w-12 h-12" />
+                      </div>
+                      <h2 className="text-4xl font-serif italic font-black uppercase tracking-tighter gold-text mb-4">Governança & Business Intelligence</h2>
+                      <p className="text-white/30 font-bold max-w-sm uppercase text-[10px] tracking-[0.5em] italic">Processamento de métricas e analytics de alto desempenho em tempo real</p>
+                      <div className="mt-12 flex gap-4">
+                        {[1,2,3].map(i => <div key={i} className="w-32 h-1 bg-white/5 rounded-full overflow-hidden"><div key={i} className="w-1/3 h-full bg-[#c5a059] animate-pulse"></div></div>)}
+                      </div>
                     </div>
                  )}
                  {['whatsapp', 'social', 'google'].includes(currentSection) && (
@@ -1051,7 +1059,7 @@ export default function App() {
                  {currentSection === 'nfe' && (
                     <div className="luxury-card p-20 rounded-[3rem] text-center overflow-hidden relative luxury-gradient border-white/10">
                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c5a059]/50 to-transparent"></div>
-                       <div className="absolute inset-0 bg-blue-600/5 blur-[120px] rounded-full translate-y-1/2"></div>
+                       <div className="absolute inset-0 bg-[#c5a059]/5 blur-[120px] rounded-full translate-y-1/2"></div>
                        <FileText className="w-20 h-20 mx-auto mb-10 text-[#c5a059] opacity-40" />
                        <h2 className="text-5xl font-serif italic font-black tracking-tighter uppercase gold-text mb-8">Módulo Fiscal SEFAZ-PRO</h2>
                        <p className="text-white/40 max-w-lg mx-auto font-bold uppercase text-[11px] tracking-[0.3em] leading-relaxed mb-12 italic">Chancelamento automático de ativos e protocolos de conformidade SEFAZ com certificação Platinum.</p>
@@ -1085,7 +1093,7 @@ export default function App() {
       <div className="min-h-screen bg-[#05080d] flex items-center justify-center p-6 relative overflow-hidden">
         {/* Background Decorative Elemets */}
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#c5a059]/5 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-900/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#c5a059]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2"></div>
 
         <motion.div 
           initial={{ opacity: 0, scale: 0.95, y: 30 }}

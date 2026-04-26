@@ -114,7 +114,7 @@ export default function CRM() {
                            <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/5">
                               {lead.source === 'whatsapp' && <MessageCircle className="w-4 h-4 text-emerald-500" />}
                               {lead.source === 'instagram' && <Instagram className="w-4 h-4 text-[#c5a059]" />}
-                              {lead.source === 'facebook' && <Facebook className="w-4 h-4 text-blue-500" />}
+                              {lead.source === 'facebook' && <Facebook className="w-4 h-4 text-[#c5a059]" />}
                            </div>
                            <span className="text-[9px] font-black uppercase text-white/20 tracking-[0.2em] italic">{lead.source} stream</span>
                         </div>

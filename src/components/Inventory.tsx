@@ -55,7 +55,7 @@ export default function Inventory() {
        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 shrink-0">
           {[
             { label: 'Curadoria Total', value: '842', sub: 'Em 18 Segmentos Elite', color: '#c5a059' },
-            { label: 'Valor de Coleção', value: 'R$ 42.150', sub: 'Lastro Operacional', color: '#3b82f6' },
+            { label: 'Valor de Coleção', value: 'R$ 42.150', sub: 'Lastro Operacional', color: '#94a3b8' },
             { label: 'Reposição Urgente', value: '4', sub: 'Protocolo de Escassez', color: '#f43f5e' },
           ].map((stat, i) => (
              <div key={i} className="luxury-card p-10 border-white/5 luxury-gradient relative overflow-hidden group">
