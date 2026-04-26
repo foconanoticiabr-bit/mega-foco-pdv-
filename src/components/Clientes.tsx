@@ -29,88 +29,88 @@ export default function Clientes() {
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div className="flex items-center gap-4 flex-1 max-w-md">
-           <div className="relative flex-1">
-             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+    <div className="space-y-12">
+      <div className="flex items-center justify-between flex-wrap gap-8">
+        <div className="flex items-center gap-6 flex-1 max-w-xl">
+           <div className="relative flex-1 group">
+             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#c5a059] w-5 h-5 transition-colors" />
              <input 
                type="text" 
-               placeholder="Buscar cliente por nome, e-mail ou telefone..."
-               className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-[1.5rem] shadow-sm outline-none focus:ring-2 focus:ring-blue-500 font-bold text-sm"
+               placeholder="MAPPING ELITE: Pesquisar rede de contatos..."
+               className="w-full pl-16 pr-6 py-6 bg-white/5 border border-white/5 rounded-full shadow-2xl focus:border-[#c5a059]/30 outline-none font-bold text-xs uppercase tracking-[0.2em] text-white placeholder:text-white/10 transition-all italic"
                value={searchTerm}
                onChange={(e) => setSearchTerm(e.target.value)}
              />
            </div>
-           <button className="p-4 bg-white border border-slate-200 rounded-[1.5rem] text-slate-400 hover:text-blue-600 transition-all">
-             <Filter className="w-5 h-5" />
+           <button className="p-5 bg-white/5 border border-white/5 rounded-2xl text-white/20 hover:text-[#c5a059] hover:border-[#c5a059]/30 transition-all luxury-gradient">
+             <Filter className="w-6 h-6" />
            </button>
         </div>
-        <button className="px-8 py-4 bg-blue-600 text-white rounded-[1.5rem] text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-xl shadow-blue-200 hover:scale-105 active:scale-95 transition-all">
+        <button className="px-10 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-3 shadow-2xl shadow-[#c5a059]/20 hover:scale-[1.02] transition-all italic">
           <Plus className="w-5 h-5" />
-          Novo Cliente
+          Novo Ativo
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filtered.map((customer) => (
-          <div key={customer.id} className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm group hover:border-blue-500 transition-all flex flex-col h-full relative overflow-hidden">
+          <div key={customer.id} className="luxury-card p-10 border-white/5 hover:border-[#c5a059]/30 transition-all duration-700 flex flex-col h-full relative overflow-hidden group luxury-gradient">
              {/* Category Badge */}
-             <div className={`absolute top-0 right-0 px-6 py-2 rounded-bl-[1.5rem] text-[9px] font-black uppercase tracking-[0.2em] shadow-sm ${customer.category === 'platinum' ? 'bg-slate-900 text-slate-200' : customer.category === 'gold' ? 'bg-amber-400 text-amber-900' : 'bg-slate-100 text-slate-400'}`}>
-                {customer.category}
+             <div className={`absolute top-0 right-0 px-8 py-3 rounded-bl-[2rem] text-[9px] font-black uppercase tracking-[0.3em] italic shadow-2xl border-l border-b border-white/5 ${customer.category === 'platinum' ? 'bg-[#c5a059] text-[#0a0e17]' : customer.category === 'gold' ? 'bg-amber-400/10 text-amber-400 border-amber-400/20' : 'bg-white/5 text-white/40'}`}>
+                {customer.category} elite
              </div>
 
-             <div className="flex items-center gap-5 mb-8">
-                <div className="w-16 h-16 bg-slate-50 rounded-[1.5rem] flex items-center justify-center text-slate-200 font-black text-2xl border border-slate-100 group-hover:bg-blue-50 group-hover:text-blue-500 group-hover:border-blue-100 transition-all">
+             <div className="flex items-center gap-6 mb-10">
+                <div className="w-20 h-20 bg-white/5 rounded-[2rem] flex items-center justify-center text-white/10 font-serif italic font-black text-3xl border border-white/10 group-hover:bg-[#c5a059] group-hover:text-[#0a0e17] group-hover:border-[#c5a059] transition-all duration-700 shadow-inner">
                    {customer.name.charAt(0)}
                 </div>
                 <div>
-                   <h4 className="text-xl font-black text-slate-900 tracking-tighter">{customer.name}</h4>
-                   <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-1.5 mt-1">
+                   <h4 className="text-2xl font-serif italic font-black text-white tracking-tighter group-hover:gold-text transition-all leading-none mb-2">{customer.name}</h4>
+                   <p className="text-[10px] font-black text-[#c5a059] uppercase tracking-[0.3em] flex items-center gap-2 italic">
                       <Gift className="w-3.5 h-3.5" />
-                      {customer.points} Pontos Fidelidade
+                      {customer.points} Lotes Fidelidade
                    </p>
                 </div>
              </div>
 
-             <div className="space-y-3 mb-8">
-                <div className="flex items-center gap-3 text-slate-500 text-xs font-medium">
-                   <Phone className="w-4 h-4 text-slate-300" />
+             <div className="space-y-4 mb-10">
+                <div className="flex items-center gap-4 text-white/40 text-[10px] font-black uppercase tracking-widest italic group-hover:text-white/60 transition-colors">
+                   <Phone className="w-4 h-4 text-[#c5a059]" />
                    {customer.phone}
                 </div>
-                <div className="flex items-center gap-3 text-slate-500 text-xs font-medium">
-                   <Mail className="w-4 h-4 text-slate-300" />
+                <div className="flex items-center gap-4 text-white/40 text-[10px] font-black uppercase tracking-widest italic group-hover:text-white/60 transition-colors">
+                   <Mail className="w-4 h-4 text-[#c5a059]" />
                    <span className="truncate">{customer.email}</span>
                 </div>
              </div>
 
-             <div className="mt-auto grid grid-cols-2 gap-4 pt-6 border-t border-slate-100">
+             <div className="mt-auto grid grid-cols-2 gap-6 pt-8 border-t border-white/5">
                 <div>
-                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Gasto</p>
-                  <p className="text-sm font-black text-slate-900">R$ {customer.totalSpent.toFixed(2)}</p>
+                   <p className="text-[9px] font-black text-white/20 uppercase tracking-[0.4em] mb-2 italic">Volume Alocado</p>
+                   <p className="text-lg font-serif italic font-black gold-text tracking-tighter">R$ {customer.totalSpent.toFixed(2)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Última Visita</p>
-                  <p className="text-sm font-bold text-slate-600">{customer.lastVisit}</p>
+                   <p className="text-[9px] font-black text-white/20 uppercase tracking-[0.4em] mb-2 italic">Histórico Recente</p>
+                   <p className="text-xs font-bold text-white/60 uppercase tracking-widest italic">{customer.lastVisit}</p>
                 </div>
              </div>
 
-             <div className="flex gap-2 mt-6">
-                <button className="flex-1 py-3 bg-slate-50 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-2">
-                   <History className="w-3.5 h-3.5" /> Histórico
+             <div className="flex gap-3 mt-10">
+                <button className="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl text-[9px] font-black uppercase tracking-[0.3em] text-white/40 hover:bg-white/10 hover:text-white transition-all duration-500 flex items-center justify-center gap-3 italic">
+                   <History className="w-4 h-4" /> Dossiê Completo
                 </button>
-                <button className="p-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
-                   <MoreHorizontal className="w-4 h-4" />
+                <button className="w-14 h-14 bg-[#c5a059]/10 text-[#c5a059] border border-[#c5a059]/20 rounded-2xl flex items-center justify-center hover:bg-[#c5a059] hover:text-[#0a0e17] transition-all duration-500 shadow-lg shadow-[#c5a059]/10">
+                   <MoreHorizontal className="w-5 h-5" />
                 </button>
              </div>
           </div>
         ))}
 
-        <button className="h-full min-h-[300px] border-4 border-dashed border-slate-100 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 text-slate-200 hover:text-blue-200 hover:border-blue-50 transition-all group">
-           <div className="p-6 bg-slate-50 rounded-full group-hover:bg-blue-50 transition-colors">
-              <Plus className="w-10 h-10" />
+        <button className="h-full min-h-[350px] border-4 border-dashed border-white/5 rounded-[3rem] flex flex-col items-center justify-center gap-6 text-white/10 hover:text-[#c5a059] hover:border-[#c5a059]/20 hover:bg-[#c5a059]/5 transition-all duration-700 group luxury-gradient">
+           <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center group-hover:bg-[#c5a059]/10 transition-all duration-700 border border-white/5 group-hover:border-[#c5a059]/20">
+              <Plus className="w-10 h-10 group-hover:rotate-90 transition-transform duration-700" />
            </div>
-           <span className="text-[10px] font-black uppercase tracking-[0.4em]">Adicionar Manual</span>
+           <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">Captura Manual Ativos</span>
         </button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 {
-  "name": "MegaFoco PDV",
-  "description": "Sistema completo de gestão PDV, controle de estoque, agendamentos, CRM e financeiro para varejo e beleza.",
+  "name": "MegaFoco PDV & CRM",
+  "description": "Sistema completo de Gestão, PDV, CRM Integrado com Redes Sociais, Agendamentos e Relatórios Fiscais.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "PDV / Frente de Caixa",

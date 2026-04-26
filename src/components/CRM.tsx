@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { MoreHorizontal, Plus, Search, MessageCircle, Instagram, Facebook } from 'lucide-react';
-import { motion, Reorder } from 'motion/react';
+import React, { useState, useEffect } from 'react';
+import { MoreHorizontal, Plus, Search, MessageCircle, Instagram, Facebook, Loader2 } from 'lucide-react';
+import { motion } from 'motion/react';
+import { supabase } from '../lib/supabase';
 
 interface Lead {
   id: string;
   name: string;
   source: 'whatsapp' | 'instagram' | 'facebook';
+  status: string;
   value: number;
 }
 
@@ -17,87 +19,122 @@ interface Column {
 
 const INITIAL_DATA: Column[] = [
   { id: 'novo', title: 'Novo Lead', leads: [
-    { id: 'l1', name: 'Marina Silva', source: 'whatsapp', value: 450 },
-    { id: 'l2', name: 'João Paulo', source: 'instagram', value: 1200 },
+    { id: 'l1', name: 'Marina Silva', source: 'whatsapp', status: 'novo', value: 450 },
+    { id: 'l2', name: 'João Paulo', source: 'instagram', status: 'novo', value: 1200 },
   ]},
   { id: 'contato', title: 'Em Contato', leads: [
-    { id: 'l3', name: 'Boutique XYZ', source: 'facebook', value: 3000 },
+    { id: 'l3', name: 'Boutique XYZ', source: 'facebook', status: 'contato', value: 3000 },
   ]},
   { id: 'proposta', title: 'Proposta', leads: [
-    { id: 'l4', name: 'Arthur Lima', source: 'whatsapp', value: 890 },
+    { id: 'l4', name: 'Arthur Lima', source: 'whatsapp', status: 'proposta', value: 890 },
   ]},
   { id: 'fechado', title: 'Fechado ✓', leads: [
-    { id: 'l5', name: 'Espaço Beleza', source: 'instagram', value: 5600 },
+    { id: 'l5', name: 'Espaço Beleza', source: 'instagram', status: 'fechado', value: 5600 },
   ]},
 ];
 
 export default function CRM() {
   const [columns, setColumns] = useState(INITIAL_DATA);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  const fetchLeads = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*');
+      
+      if (error) {
+        if (error.code === 'PGRST116' || error.message.includes('relation "leads" does not exist')) {
+          console.log('Supabase table "leads" not found. Using mock data.');
+          setLoading(false);
+          return;
+        }
+        throw error;
+      }
+
+      if (data && data.length > 0) {
+        const sortedColumns = INITIAL_DATA.map(col => ({
+          ...col,
+          leads: data.filter((l: any) => l.status === col.id)
+        }));
+        setColumns(sortedColumns);
+      }
+    } catch (error) {
+      console.error('Error fetching leads:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="flex flex-col h-full gap-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4 flex-1 max-w-md">
-           <div className="relative flex-1">
-             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+    <div className="flex flex-col h-full gap-8">
+      <div className="flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-6 flex-1 max-w-xl">
+           <div className="relative flex-1 group">
+             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#c5a059] w-4 h-4 transition-colors" />
              <input 
                type="text" 
-               placeholder="Filtrar por nome ou canal..."
-               className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+               placeholder="MAPPING ELITE: Pesquisar conexões..."
+               className="w-full pl-12 pr-6 py-4 bg-white/5 border border-white/5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] italic text-white outline-none focus:border-[#c5a059]/30 transition-all placeholder:text-white/10"
              />
            </div>
+           {loading && <Loader2 className="w-5 h-5 text-[#c5a059] animate-spin" />}
         </div>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-blue-200">
-          <Plus className="w-4 h-4" />
-          Novo Lead
+        <button className="px-8 py-4 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 hover:scale-[1.05] transition-all shadow-2xl shadow-[#c5a059]/20 italic">
+          <Plus className="w-5 h-5" />
+          Capturar Lead
         </button>
       </div>
 
-      <div className="flex gap-6 overflow-x-auto pb-4 flex-1">
+      <div className="flex gap-8 overflow-x-auto pb-6 flex-1 custom-scrollbar">
         {columns.map(column => (
-          <div key={column.id} className="min-w-[280px] w-80 bg-slate-100/50 rounded-[2rem] p-4 flex flex-col gap-4 border border-slate-200/50">
+          <div key={column.id} className="min-w-[320px] w-96 bg-white/5 rounded-[3rem] p-6 flex flex-col gap-6 border border-white/5 luxury-gradient">
              <div className="flex items-center justify-between px-2">
-                <div className="flex items-center gap-2">
-                   <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-600">{column.title}</h3>
-                   <span className="w-5 h-5 bg-white border border-slate-200 rounded-full flex items-center justify-center text-[10px] font-black text-slate-400">{column.leads.length}</span>
+                <div className="flex items-center gap-4">
+                   <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">{column.title}</h3>
+                   <span className="w-6 h-6 bg-[#c5a059]/10 border border-[#c5a059]/20 rounded-full flex items-center justify-center text-[10px] font-black text-[#c5a059] italic">{column.leads.length}</span>
                 </div>
-                <button className="p-1 hover:bg-white rounded-lg text-slate-400"><MoreHorizontal className="w-4 h-4" /></button>
+                <button className="p-2 hover:bg-white/5 rounded-xl text-white/20 hover:text-white transition-all"><MoreHorizontal className="w-5 h-5" /></button>
              </div>
 
-             <div className="flex-1 flex flex-col gap-3">
+             <div className="flex-1 flex flex-col gap-4">
                 {column.leads.map(lead => (
                   <motion.div 
                     key={lead.id}
-                    whileHover={{ y: -2 }}
-                    className="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-3 cursor-grab active:cursor-grabbing group transition-all hover:border-blue-300"
+                    whileHover={{ y: -5 }}
+                    className="luxury-card p-6 border-white/5 flex flex-col gap-5 cursor-grab active:cursor-grabbing group transition-all hover:border-[#c5a059]/30 luxury-gradient"
                   >
                      <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-2">
-                           {lead.source === 'whatsapp' && <MessageCircle className="w-3.5 h-3.5 text-emerald-500" />}
-                           {lead.source === 'instagram' && <Instagram className="w-3.5 h-3.5 text-pink-600" />}
-                           {lead.source === 'facebook' && <Facebook className="w-3.5 h-3.5 text-blue-600" />}
-                           <span className="text-[9px] font-black uppercase text-slate-400 tracking-tighter">{lead.source}</span>
+                        <div className="flex items-center gap-3">
+                           <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/5">
+                              {lead.source === 'whatsapp' && <MessageCircle className="w-4 h-4 text-emerald-500" />}
+                              {lead.source === 'instagram' && <Instagram className="w-4 h-4 text-[#c5a059]" />}
+                              {lead.source === 'facebook' && <Facebook className="w-4 h-4 text-blue-500" />}
+                           </div>
+                           <span className="text-[9px] font-black uppercase text-white/20 tracking-[0.2em] italic">{lead.source} stream</span>
                         </div>
-                        <button className="p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                           <MoreHorizontal className="w-4 h-4 text-slate-300" />
-                        </button>
                      </div>
                      
                      <div>
-                        <h4 className="text-sm font-bold text-slate-900">{lead.name}</h4>
-                        <p className="text-[10px] font-black text-slate-400">R$ {lead.value.toFixed(2)}</p>
+                        <h4 className="text-lg font-serif italic font-bold text-white tracking-tight leading-none mb-2">{lead.name}</h4>
+                        <p className="text-[10px] font-black gold-text tracking-[0.3em] uppercase italic">Poder de Compra: R$ {lead.value.toFixed(2)}</p>
                      </div>
 
-                     <div className="flex gap-2 mt-2">
-                        <button className="flex-1 py-1.5 bg-slate-50 rounded-lg text-[9px] font-black uppercase tracking-widest text-slate-500 hover:bg-blue-50 hover:text-blue-600 transition-all">Ver Detalhes</button>
-                        <button className="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg"><MessageCircle className="w-3.5 h-3.5" /></button>
+                     <div className="flex gap-3">
+                        <button className="flex-1 py-3 bg-white/5 rounded-xl text-[9px] font-black uppercase tracking-[0.3em] text-white/40 hover:bg-white/10 hover:text-white transition-all duration-500 italic border border-white/5">Dossiê</button>
+                        <button className="w-12 h-10 bg-[#c5a059]/10 text-[#c5a059] rounded-xl flex items-center justify-center border border-[#c5a059]/20 hover:bg-[#c5a059] hover:text-[#0a0e17] transition-all duration-500"><MessageCircle className="w-5 h-5 shadow-inner" /></button>
                      </div>
                   </motion.div>
                 ))}
                 
-                <button className="w-full py-3 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center gap-2 text-slate-300 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50/20 transition-all group">
-                   <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform" />
-                   <span className="text-[10px] font-black uppercase tracking-[0.2em]">Adicionar</span>
+                <button className="w-full py-6 border-2 border-dashed border-white/5 rounded-[2rem] flex items-center justify-center gap-3 text-white/10 hover:text-[#c5a059] hover:border-[#c5a059]/20 hover:bg-[#c5a059]/5 transition-all group duration-500">
+                   <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform" />
+                   <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">Vincular Ativo</span>
                 </button>
              </div>
           </div>

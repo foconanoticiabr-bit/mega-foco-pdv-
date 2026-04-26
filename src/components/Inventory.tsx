@@ -29,105 +29,105 @@ export default function Inventory() {
   );
 
   return (
-    <div className="space-y-8 h-full flex flex-col">
+    <div className="space-y-10 h-full flex flex-col">
        <div className="flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-4 flex-1 max-w-md">
-             <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+          <div className="flex items-center gap-6 flex-1 max-w-xl">
+             <div className="relative flex-1 group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#c5a059] w-4 h-4 transition-colors" />
                 <input 
                    type="text" 
-                   placeholder="Buscar produtos..." 
-                   className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                   placeholder="MAPPING ELITE: Pesquisar coleções..." 
+                   className="w-full pl-12 pr-6 py-4 bg-white/5 border border-white/5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] italic text-white focus:border-[#c5a059]/30 outline-none transition-all placeholder:text-white/10"
                    value={searchTerm}
                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
              </div>
-             <button className="p-3 bg-white border border-slate-200 rounded-2xl text-slate-400 hover:text-blue-600 transition-all">
+             <button className="p-4 bg-white/5 border border-white/5 rounded-2xl text-white/20 hover:text-[#c5a059] hover:border-[#c5a059]/30 transition-all luxury-gradient">
                 <Filter className="w-5 h-5" />
              </button>
           </div>
-          <button className="px-6 py-3 bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-xl shadow-blue-200">
+          <button className="px-8 py-4 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 hover:scale-[1.05] transition-all shadow-2xl shadow-[#c5a059]/20 italic">
              <Plus className="w-5 h-5" />
-             Novo Produto
+             Novo Artefato
           </button>
        </div>
 
-       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 shrink-0">
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 shrink-0">
           {[
-            { label: 'Total Itens', value: '842', sub: 'Em 18 categorias', color: 'blue' },
-            { label: 'Valor em Estoque', value: 'R$ 42.150', sub: 'Preço de Custo', color: 'slate' },
-            { label: 'Reposição Urgente', value: '4', sub: 'Abaixo do mínimo', color: 'rose' },
+            { label: 'Curadoria Total', value: '842', sub: 'Em 18 Segmentos Elite', color: '#c5a059' },
+            { label: 'Valor de Coleção', value: 'R$ 42.150', sub: 'Lastro Operacional', color: '#3b82f6' },
+            { label: 'Reposição Urgente', value: '4', sub: 'Protocolo de Escassez', color: '#f43f5e' },
           ].map((stat, i) => (
-             <div key={i} className={`bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden relative`}>
-                <div className={`absolute top-0 left-0 w-1 pt-full bg-${stat.color}-500/20`}></div>
-                <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">{stat.label}</p>
-                <h4 className={`text-2xl font-black tracking-tighter ${stat.color === 'rose' ? 'text-rose-600' : 'text-slate-900'}`}>{stat.value}</h4>
-                <p className="text-[10px] font-bold text-slate-400 opacity-60 uppercase">{stat.sub}</p>
+             <div key={i} className="luxury-card p-10 border-white/5 luxury-gradient relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full translate-x-12 -translate-y-12 group-hover:scale-150 transition-transform duration-700"></div>
+                <p className="text-[10px] font-black uppercase text-white/30 tracking-[0.4em] mb-3 italic">{stat.label}</p>
+                <h4 className={`text-3xl font-serif italic font-black tracking-tighter ${stat.label === 'Reposição Urgente' ? 'text-rose-500' : 'gold-text'}`}>{stat.value}</h4>
+                <p className="text-[9px] font-bold text-white/10 uppercase tracking-widest mt-2 italic">{stat.sub}</p>
              </div>
           ))}
        </div>
 
-       <div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden flex flex-col flex-1">
+       <div className="luxury-card border-white/5 overflow-hidden flex flex-col flex-1 luxury-gradient">
           <div className="overflow-x-auto">
-             <table className="w-full text-left border-collapse">
+             <table className="w-full text-left uppercase text-[9px] tracking-[0.2em] font-black">
                 <thead>
-                   <tr className="bg-slate-50/50 border-b border-slate-100">
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Produto</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Categoria</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Quantidade</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Preço</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Ações</th>
+                   <tr className="bg-black/20 border-b border-white/5">
+                      <th className="px-10 py-6 text-white/30 italic">Designação do Ativo</th>
+                      <th className="px-10 py-6 text-white/30 italic">Segmento</th>
+                      <th className="px-10 py-6 text-white/30 italic text-center">Status</th>
+                      <th className="px-10 py-6 text-white/30 italic text-center">Disponibilidade</th>
+                      <th className="px-10 py-6 text-white/30 italic text-right">Valor Unitário</th>
+                      <th className="px-10 py-6 text-white/30 italic text-center">Ações</th>
                    </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-50">
+                <tbody className="divide-y divide-white/5 font-bold italic">
                    {filtered.map(p => {
                       const isLow = p.stock <= p.minStock && p.stock > 0;
                       const isOut = p.stock === 0;
                       return (
-                        <tr key={p.id} className="hover:bg-slate-50/50 transition-all group">
-                           <td className="px-6 py-4">
-                              <div className="flex items-center gap-3">
-                                 <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-300">
-                                    <Package className="w-5 h-5" />
+                        <tr key={p.id} className="hover:bg-white/5 transition-all duration-500 group">
+                           <td className="px-10 py-8">
+                              <div className="flex items-center gap-5">
+                                 <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-white/10 group-hover:text-[#c5a059] group-hover:border-[#c5a059]/20 transition-all duration-500">
+                                    <Package className="w-6 h-6" />
                                  </div>
-                                 <span className="text-sm font-bold text-slate-900">{p.name}</span>
+                                 <span className="text-sm font-serif font-black text-white group-hover:text-[#c5a059] transition-colors">{p.name}</span>
                               </div>
                            </td>
-                           <td className="px-6 py-4">
-                              <span className="text-[10px] font-black uppercase text-slate-400 tracking-tighter bg-slate-100 px-2 py-1 rounded-md">{p.category}</span>
+                           <td className="px-10 py-8">
+                              <span className="text-[9px] font-black text-white/30 border border-white/10 px-3 py-1 rounded-full">{p.category}</span>
                            </td>
-                           <td className="px-6 py-4">
+                           <td className="px-10 py-8 text-center">
                               {isOut ? (
-                                <div className="flex items-center gap-1.5 text-rose-600">
+                                <div className="inline-flex items-center gap-2 text-rose-500 px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-full">
                                    <AlertCircle className="w-4 h-4" />
-                                   <span className="text-[10px] font-black uppercase tracking-tighter">Esgotado</span>
+                                   <span className="text-[8px] font-black uppercase tracking-widest">Esgotado</span>
                                 </div>
                               ) : isLow ? (
-                                <div className="flex items-center gap-1.5 text-amber-600">
+                                <div className="inline-flex items-center gap-2 text-amber-500 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full">
                                    <AlertCircle className="w-4 h-4" />
-                                   <span className="text-[10px] font-black uppercase tracking-tighter">Estoque Baixo</span>
+                                   <span className="text-[8px] font-black uppercase tracking-widest">Protocolo Baixo</span>
                                 </div>
                               ) : (
-                                <div className="flex items-center gap-1.5 text-emerald-600">
-                                   <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                                   <span className="text-[10px] font-black uppercase tracking-tighter">Ativo</span>
+                                <div className="inline-flex items-center gap-2 text-emerald-500 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+                                   <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+                                   <span className="text-[8px] font-black uppercase tracking-widest">Ativo Elite</span>
                                 </div>
                               )}
                            </td>
-                           <td className="px-6 py-4">
+                           <td className="px-10 py-8">
                               <div className="flex flex-col items-center">
-                                 <span className={`text-sm font-black ${isOut ? 'text-rose-600' : isLow ? 'text-amber-600' : 'text-slate-900'}`}>{p.stock} un.</span>
-                                 <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Min: {p.minStock}</span>
+                                 <span className={`text-sm font-serif font-black ${isOut ? 'text-rose-500' : isLow ? 'text-amber-500' : 'text-white'}`}>{p.stock} UN.</span>
+                                 <span className="text-[8px] font-bold text-white/20 uppercase tracking-widest leading-none mt-1">Min: {p.minStock}</span>
                               </div>
                            </td>
-                           <td className="px-6 py-4 text-right">
-                              <span className="text-sm font-black text-slate-900">R$ {p.price.toFixed(2)}</span>
+                           <td className="px-10 py-8 text-right font-serif font-black text-lg gold-text tracking-tighter">
+                              R$ {p.price.toFixed(2)}
                            </td>
-                           <td className="px-6 py-4 text-center">
-                              <div className="flex items-center justify-center gap-2">
-                                 <button className="p-2 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all"><Edit3 className="w-4 h-4" /></button>
-                                 <button className="p-2 hover:bg-rose-50 hover:text-rose-600 rounded-xl transition-all"><Trash2 className="w-4 h-4" /></button>
+                           <td className="px-10 py-8 text-center">
+                              <div className="flex items-center justify-center gap-4">
+                                 <button className="p-3 bg-white/5 hover:text-[#c5a059] border border-white/5 hover:border-[#c5a059]/20 rounded-xl transition-all duration-500"><Edit3 className="w-4 h-4" /></button>
+                                 <button className="p-3 bg-white/5 hover:text-rose-500 border border-white/5 hover:border-rose-500/20 rounded-xl transition-all duration-500"><Trash2 className="w-4 h-4" /></button>
                               </div>
                            </td>
                         </tr>

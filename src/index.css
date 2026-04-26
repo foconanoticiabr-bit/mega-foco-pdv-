@@ -1,1 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --color-brand-midnight: #0a0e17;
+  --color-brand-gold: #c5a059;
+  --color-brand-accent: #2563eb;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-serif: "Playfair Display", serif;
+}
+
+@layer base {
+  body {
+    @apply bg-[#0a0e17] text-white antialiased font-display;
+  }
+}
+
+.luxury-card {
+  @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] shadow-2xl;
+}
+
+.luxury-gradient {
+  @apply bg-gradient-to-br from-white/10 via-white/5 to-transparent;
+}
+
+.gold-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-b from-[#f9d976] to-[#c5a059];
+}
