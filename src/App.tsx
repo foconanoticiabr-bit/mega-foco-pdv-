@@ -86,11 +86,19 @@ export default function App() {
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [isGeneratingPayment, setIsGeneratingPayment] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [mpPixData, setMpPixData] = useState<{ qr_code: string, qr_code_base64: string } | null>(null);
 
-  const pixKey = "e90ed24d-f93a-4543-ba26-0a4276f76bcb";
+  const pixKeys = {
+    primary: "62995108558",
+    secondary: "74981188134",
+    extra: "56f0ad86-8002-44e3-a6f0-50cc29cdbe31"
+  };
 
-  const handleCopyPix = () => {
-    navigator.clipboard.writeText(pixKey);
+  const [currentPixKey, setCurrentPixKey] = useState(pixKeys.primary);
+
+  const handleCopyPix = (text?: string) => {
+    const toCopy = text || (mpPixData?.qr_code) || currentPixKey;
+    navigator.clipboard.writeText(toCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -98,23 +106,56 @@ export default function App() {
   const handleMercadoPagoCheckout = async () => {
     if (!selectedPlan) return;
     setIsGeneratingPayment(true);
+    setMpPixData(null);
+    
     try {
+      // 1. First try creating a Preference (Checkout Pro)
       const response = await fetch('/api/create-preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           planName: selectedPlan.name,
           price: selectedPlan.price,
-          userEmail: 'foconanoticiabr@gmail.com' // Using user email from context
+          userEmail: 'foconanoticiabr@gmail.com'
         }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ details: 'System offline or 404' }));
+        throw new Error(errorData.details || errorData.error || 'Falha na resposta do servidor');
+      }
+
       const data = await response.json();
+      
+      // 2. Also try creating a direct PIX as a backup/alternative
+      try {
+        const pixResp = await fetch('/api/create-pix', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            planName: selectedPlan.name,
+            price: selectedPlan.price,
+            userEmail: 'foconanoticiabr@gmail.com'
+          }),
+        });
+        if (pixResp.ok) {
+          const pixData = await pixResp.json();
+          if (pixData.qr_code) {
+            setMpPixData(pixData);
+          }
+        }
+      } catch (pixErr) {
+        console.warn('Silent PIX gen failure:', pixErr);
+      }
+
       if (data.init_point) {
-        window.open(data.init_point, '_blank');
+        window.location.href = data.init_point;
+      } else {
+        throw new Error('Ponto de início não retornado pela API');
       }
     } catch (error) {
       console.error('Error generating payment:', error);
-      alert('Erro ao gerar pagamento. Tente novamente.');
+      alert(`Erro ao gerar pagamento: ${error instanceof Error ? error.message : 'Verifique sua conexão e tente novamente.'}`);
     } finally {
       setIsGeneratingPayment(false);
     }
@@ -518,31 +559,31 @@ export default function App() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg bg-[#0a0e17] rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 luxury-gradient"
+              className="relative w-full max-w-lg bg-[#0a0e17] sm:rounded-[3rem] rounded-t-[2.5rem] overflow-hidden shadow-2xl border border-white/10 luxury-gradient max-h-[90vh] overflow-y-auto"
             >
               <button 
                 onClick={() => setSelectedPlan(null)}
-                className="absolute top-8 right-8 p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10 border border-white/10"
+                className="absolute top-4 right-4 sm:top-8 sm:right-8 p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10 border border-white/10"
               >
                 <X className="w-5 h-5 text-white/50" />
               </button>
 
-              <div className="p-12">
-                <div className="flex items-center gap-6 mb-12">
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#f9d976] to-[#c5a059] rounded-2xl flex items-center justify-center text-[#0a0e17]">
-                    <QrCode className="w-8 h-8" />
+              <div className="p-6 sm:p-12">
+                <div className="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-12 mt-4 sm:mt-0">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-[#f9d976] to-[#c5a059] rounded-2xl flex items-center justify-center text-[#0a0e17]">
+                    <QrCode className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-serif font-black tracking-tight text-white uppercase italic">Protocolo de Adesão</h3>
-                    <p className="text-[10px] font-black text-[#c5a059] uppercase tracking-[0.3em]">Módulo {selectedPlan.name} • Investimento Mensal</p>
+                    <h3 className="text-xl sm:text-2xl font-serif font-black tracking-tight text-white uppercase italic leading-tight">Protocolo de Adesão</h3>
+                    <p className="text-[9px] sm:text-[10px] font-black text-[#c5a059] uppercase tracking-[0.2em] sm:tracking-[0.3em]">Módulo {selectedPlan.name} • R$ {selectedPlan.price}/mês</p>
                   </div>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <button 
                     onClick={handleMercadoPagoCheckout}
                     disabled={isGeneratingPayment}
-                    className="w-full py-6 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full font-bold uppercase tracking-[0.3em] text-xs hover:scale-[1.02] transition-all shadow-xl shadow-[#c5a059]/20 flex items-center justify-center gap-3 disabled:opacity-50"
+                    className="w-full py-5 sm:py-6 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[10px] sm:text-xs hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-[#c5a059]/20 flex items-center justify-center gap-3 disabled:opacity-50"
                   >
                     {isGeneratingPayment ? (
                       <span className="animate-pulse">PROCESSANDO...</span>
@@ -554,33 +595,69 @@ export default function App() {
                     )}
                   </button>
 
-                  <div className="flex items-center gap-4 py-4">
+                  <div className="flex items-center gap-4 py-2 sm:py-4">
                     <div className="flex-1 h-px bg-white/5"></div>
-                    <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">OU TRANSFERÊNCIA PIX</span>
+                    <span className="text-[9px] sm:text-[10px] font-black text-white/20 uppercase tracking-[0.3em] sm:tracking-[0.4em]">OU TRANSFERÊNCIA PIX</span>
                     <div className="flex-1 h-px bg-white/5"></div>
                   </div>
 
-                  <div className="luxury-card bg-white/5 p-8 rounded-3xl mb-6 flex flex-col items-center">
-                    <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em] mb-6">CHAVE DE TRANSAÇÃO INSTANTÂNEA</p>
+                  <div className="luxury-card bg-white/5 p-6 sm:p-8 rounded-[2rem] sm:rounded-3xl flex flex-col items-center">
+                    <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em] mb-4 sm:mb-6">
+                      {mpPixData ? 'CÓDIGO PIX DINÂMICO (CONFIRMAÇÃO AUTOMÁTICA)' : 'CÓDIGO QR PARA PAGAMENTO'}
+                    </p>
                     
-                    <div className="w-full bg-[#05080d] p-5 rounded-2xl border border-white/5 mb-4 flex items-center gap-4 group">
-                      <div className="flex-1 min-w-0 truncate text-[10px] font-mono font-bold text-white/40 tracking-wider">
-                        {pixKey}
-                      </div>
-                      <button 
-                        onClick={handleCopyPix}
-                        className="p-3 bg-[#c5a059]/10 text-[#c5a059] rounded-xl hover:bg-[#c5a059] hover:text-[#0a0e17] transition-all"
-                      >
-                        {copied ? <CheckCircle2 className="w-4.5 h-4.5" /> : <Copy className="w-4.5 h-4.5" />}
-                      </button>
+                    {/* Simulated or Real QR Code Display */}
+                    <div className="w-40 h-40 sm:w-48 sm:h-48 bg-white p-3 rounded-2xl mb-6 shadow-inner flex items-center justify-center relative group">
+                       <img 
+                        src={mpPixData ? `data:image/png;base64,${mpPixData.qr_code_base64}` : `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020126580014br.gov.bcb.pix0114${currentPixKey}5204000053039865408${selectedPlan.price}.005802BR5913MEGAFOCO%20PDV6009SAO%20PAULO62070503***6304`} 
+                        alt="PIX QR Code" 
+                        className="w-full h-full"
+                        referrerPolicy="no-referrer"
+                       />
+                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
+                          <p className="text-white text-[10px] font-black uppercase tracking-widest">{mpPixData ? 'Válido por 30min' : 'Escaneie agora'}</p>
+                       </div>
                     </div>
-                    <p className="text-[10px] font-medium text-white/20 italic">Liberação automática via inteligência de rede</p>
+
+                    <div className="w-full space-y-3 mb-6 font-sans">
+                      {!mpPixData && (
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-[9px] font-black text-white/20 uppercase tracking-widest">Selecione a Chave Estática:</span>
+                          <div className="flex gap-2">
+                             {Object.values(pixKeys).map((key, idx) => (
+                               <button
+                                 key={idx}
+                                 onClick={() => setCurrentPixKey(key)}
+                                 className={`w-4 h-4 rounded-full border-2 transition-all ${currentPixKey === key ? 'bg-[#c5a059] border-[#c5a059]' : 'bg-transparent border-white/20'}`}
+                               />
+                             ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="w-full bg-[#05080d] p-4 sm:p-5 rounded-2xl border border-white/5 flex items-center gap-4 group">
+                        <div className="flex-1 min-w-0 truncate text-[10px] sm:text-xs font-mono font-bold text-white/60 tracking-wider">
+                          {mpPixData ? mpPixData.qr_code : currentPixKey}
+                        </div>
+                        <button 
+                          onClick={() => handleCopyPix(mpPixData?.qr_code)}
+                          className="p-2 sm:p-3 bg-[#c5a059]/10 text-[#c5a059] rounded-xl hover:bg-[#c5a059] hover:text-[#0a0e17] transition-all"
+                        >
+                          {copied ? <CheckCircle2 className="w-4.5 h-4.5" /> : <Copy className="w-4.5 h-4.5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <p className="text-[9px] sm:text-[10px] font-medium text-white/30 italic text-center leading-relaxed">
+                      {mpPixData ? 'QR Code gerado via Mercado Pago. A liberação no sistema é automática após o pagamento.' : 'Liberação Elite manual após o envio do comprovante para o suporte.'}
+                    </p>
                   </div>
 
-                  <div className="flex items-start gap-4 p-5 bg-[#10b981]/5 rounded-2xl border border-[#10b981]/10">
-                    <ShieldCheck className="w-6 h-6 text-[#10b981] shrink-0" />
-                    <p className="text-[11px] font-medium text-[#10b981]/80 leading-relaxed italic">
-                      Transação Segura. O acesso Elite será liberado instantaneamente após a confirmação do protocolo.
+
+                  <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5 bg-[#10b981]/5 rounded-2xl border border-[#10b981]/10 mb-4">
+                    <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#10b981] shrink-0" />
+                    <p className="text-[10px] sm:text-[11px] font-medium text-[#10b981]/80 leading-relaxed italic">
+                      Transação Protegida. O acesso Elite será liberado imediatamente após a confirmação do protocolo.
                     </p>
                   </div>
                 </div>
