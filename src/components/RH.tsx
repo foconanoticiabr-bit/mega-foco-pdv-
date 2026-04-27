@@ -23,23 +23,23 @@ export default function RH() {
 
   return (
     <div className="space-y-12">
-      <div className="flex items-center justify-between">
-        <div className="flex bg-white/5 p-1 rounded-full border border-white/5 luxury-gradient">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6">
+        <div className="flex bg-white/5 p-1 rounded-2xl sm:rounded-full border border-white/5 luxury-gradient flex-col sm:flex-row">
           <button 
             onClick={() => setActiveTab('employees')}
-            className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.3em] italic transition-all duration-500 ${activeTab === 'employees' ? 'bg-[#c5a059] text-[#0a0e17] shadow-2xl shadow-[#c5a059]/20' : 'text-white/20 hover:text-white'}`}
+            className={`px-8 py-3 rounded-xl sm:rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] italic transition-all duration-500 ${activeTab === 'employees' ? 'bg-[#c5a059] text-[#0a0e17] shadow-2xl shadow-[#c5a059]/20' : 'text-white/20 hover:text-white'}`}
           >
             Quadro Cooperativo
           </button>
           <button 
             onClick={() => setActiveTab('ponto')}
-            className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.3em] italic transition-all duration-500 ${activeTab === 'ponto' ? 'bg-[#c5a059] text-[#0a0e17] shadow-2xl shadow-[#c5a059]/20' : 'text-white/20 hover:text-white'}`}
+            className={`px-8 py-3 rounded-xl sm:rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] italic transition-all duration-500 ${activeTab === 'ponto' ? 'bg-[#c5a059] text-[#0a0e17] shadow-2xl shadow-[#c5a059]/20' : 'text-white/20 hover:text-white'}`}
           >
             Terminal Transacional
           </button>
         </div>
-        <button className="px-10 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-3 shadow-2xl shadow-[#c5a059]/20 italic group hover:scale-[1.02] transition-all">
-          <UserPlus className="w-5 h-5 group-hover:scale-110 transition-transform" />
+        <button className="px-8 sm:px-10 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 shadow-2xl shadow-[#c5a059]/20 italic group hover:scale-[1.02] transition-all">
+          <UserPlus className="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" />
           Vincular Cooperado
         </button>
       </div>

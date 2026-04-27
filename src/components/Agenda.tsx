@@ -79,43 +79,43 @@ export default function Agenda() {
 
       {/* Daily Schedule */}
       <div className="flex-1 space-y-8">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
            <div>
-              <h2 className="text-3xl font-serif italic font-black text-white tracking-tighter uppercase gold-text">{selectedDate}</h2>
-              <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em] mt-3 italic">{APPOINTMENTS.length} PROTOCOLOS AGENDADOS</p>
+              <h2 className="text-2xl sm:text-3xl font-serif italic font-black text-white tracking-tighter uppercase gold-text">{selectedDate}</h2>
+              <p className="text-[9px] sm:text-[10px] font-black text-white/20 uppercase tracking-[0.4em] mt-2 sm:mt-3 italic">{APPOINTMENTS.length} PROTOCOLOS AGENDADOS</p>
            </div>
-           <button className="px-10 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 shadow-2xl shadow-[#c5a059]/20 italic group hover:scale-[1.02] transition-all">
-              <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
+           <button className="w-full sm:w-auto px-8 sm:px-10 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-2xl shadow-[#c5a059]/20 italic group hover:scale-[1.02] transition-all">
+              <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500 shrink-0" />
               Novo Atendimento
            </button>
         </div>
 
         <div className="space-y-4">
            {APPOINTMENTS.map((app) => (
-             <div key={app.id} className="luxury-card p-8 border-white/5 luxury-gradient flex items-center gap-10 group hover:border-[#c5a059]/30 transition-all duration-500 cursor-pointer">
-                <div className="w-24 text-center border-r border-white/5 pr-10">
-                   <p className="text-2xl font-serif italic font-black text-white tracking-tighter mb-1">{app.time}</p>
+             <div key={app.id} className="luxury-card p-6 sm:p-8 border-white/5 luxury-gradient flex flex-col md:flex-row items-stretch md:items-center gap-6 sm:gap-10 group hover:border-[#c5a059]/30 transition-all duration-500 cursor-pointer">
+                <div className="w-full md:w-24 text-center border-b md:border-b-0 md:border-r border-white/5 pb-4 md:pb-0 md:pr-10 flex md:flex-col items-baseline md:items-center justify-center gap-2">
+                   <p className="text-xl sm:text-2xl font-serif italic font-black text-white tracking-tighter leading-none mb-1">{app.time}</p>
                    <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.4em] italic leading-none">Início</p>
                 </div>
                 
                 <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                   <div className="flex items-center gap-6">
-                      <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-white/10 group-hover:bg-[#c5a059] group-hover:text-[#0a0e17] group-hover:border-[#c5a059] transition-all duration-700">
-                         <User className="w-7 h-7" />
+                   <div className="flex items-center gap-4 sm:gap-6">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-white/10 group-hover:bg-[#c5a059] group-hover:text-[#0a0e17] group-hover:border-[#c5a059] transition-all duration-700 shrink-0">
+                         <User className="w-6 h-6 sm:w-7 sm:h-7" />
                       </div>
-                      <div>
-                         <h4 className="text-lg font-serif italic font-black text-white tracking-tight uppercase group-hover:gold-text transition-all mb-1">{app.customer}</h4>
-                         <div className="flex items-center gap-3 text-[10px] font-black text-white/20 uppercase tracking-widest italic">
-                            <Scissors className="w-3.5 h-3.5 text-[#c5a059]" />
+                      <div className="min-w-0">
+                         <h4 className="text-base sm:text-lg font-serif italic font-bold text-white tracking-tight uppercase group-hover:gold-text transition-all truncate mb-1">{app.customer}</h4>
+                         <div className="flex items-center gap-3 text-[9px] sm:text-[10px] font-black text-white/20 uppercase tracking-widest italic truncate">
+                            <Scissors className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#c5a059] shrink-0" />
                             {app.service}
                          </div>
                       </div>
                    </div>
 
-                   <div className="flex items-center gap-10">
-                      <div className="text-right hidden sm:block">
-                         <p className="text-xl font-serif italic font-black gold-text tracking-tighter">R$ {app.price.toFixed(2)}</p>
-                         <p className="text-[8px] font-black text-emerald-500 uppercase tracking-widest italic">Liquidar Protocolo</p>
+                   <div className="flex items-center justify-between sm:justify-end gap-6 sm:gap-10 border-t sm:border-t-0 border-white/5 pt-4 sm:pt-0">
+                      <div className="text-left sm:text-right">
+                         <p className="text-lg sm:text-xl font-serif italic font-black gold-text tracking-tighter leading-none mb-1">R$ {app.price.toFixed(2)}</p>
+                         <p className="text-[7px] sm:text-[8px] font-black text-emerald-500 uppercase tracking-widest italic leading-none">Liquidar Protocolo</p>
                       </div>
                       
                       <div className="flex gap-3">

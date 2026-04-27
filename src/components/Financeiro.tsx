@@ -35,68 +35,68 @@ export default function Financeiro() {
   return (
     <div className="space-y-12">
       {/* Quick Actions */}
-      <div className="flex gap-6">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
         <button 
           onClick={() => openModal('income')}
-          className="flex-1 py-8 bg-emerald-600/10 border border-emerald-500/20 text-emerald-500 rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 hover:bg-emerald-600/20 transition-all duration-500 shadow-2xl shadow-emerald-900/10"
+          className="flex-1 py-6 sm:py-8 bg-emerald-600/10 border border-emerald-500/20 text-emerald-500 rounded-[2rem] sm:rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs flex items-center justify-center gap-4 hover:bg-emerald-600/20 transition-all duration-500 shadow-2xl shadow-emerald-900/10"
         >
-          <TrendingUp className="w-5 h-5" /> Entrada de Capital
+          <TrendingUp className="w-5 h-5 shrink-0" /> Entrada de Capital
         </button>
         <button 
           onClick={() => openModal('expense')}
-          className="flex-1 py-8 bg-rose-600/10 border border-rose-500/20 text-rose-500 rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 hover:bg-rose-600/20 transition-all duration-500 shadow-2xl shadow-rose-900/10"
+          className="flex-1 py-6 sm:py-8 bg-rose-600/10 border border-rose-500/20 text-rose-500 rounded-[2rem] sm:rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs flex items-center justify-center gap-4 hover:bg-rose-600/20 transition-all duration-500 shadow-2xl shadow-rose-900/10"
         >
-          <TrendingDown className="w-5 h-5" /> Saída de Ativos
+          <TrendingDown className="w-5 h-5 shrink-0" /> Saída de Ativos
         </button>
         <button 
           onClick={() => openModal('close')}
-          className="flex-1 py-8 bg-white/5 border border-white/10 text-white rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-4 hover:bg-white/10 transition-all duration-500 shadow-2xl shadow-black"
+          className="flex-1 py-6 sm:py-8 bg-white/5 border border-white/10 text-white rounded-[2rem] sm:rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs flex items-center justify-center gap-4 hover:bg-white/10 transition-all duration-500 shadow-2xl shadow-black"
         >
-          <CheckCircle2 className="w-5 h-5" /> Fechar Protocolo
+          <CheckCircle2 className="w-5 h-5 shrink-0" /> Fechar Protocolo
         </button>
       </div>
 
       {/* Financial Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="luxury-card p-10 border-white/5 luxury-gradient relative overflow-hidden group">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="luxury-card p-8 sm:p-10 border-white/5 luxury-gradient relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700"></div>
           <div className="relative z-10">
-            <div className="w-14 h-14 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center mb-8 border border-emerald-500/20">
-              <TrendingUp className="w-7 h-7" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center mb-6 sm:mb-8 border border-emerald-500/20">
+              <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <p className="text-[10px] font-black uppercase text-white/30 tracking-[0.4em] mb-2 italic">Aportes Mensais</p>
-            <h3 className="text-4xl font-serif italic font-black text-white tracking-tighter gold-text">R$ 18.450,20</h3>
-            <p className="text-[10px] font-bold text-emerald-500 mt-4 flex items-center gap-2 uppercase tracking-widest leading-none">
-              <ArrowUpRight className="w-3 h-3" /> Rendimento +15%
+            <p className="text-[9px] sm:text-[10px] font-black uppercase text-white/30 tracking-[0.4em] mb-2 italic">Aportes Mensais</p>
+            <h3 className="text-3xl sm:text-4xl font-serif italic font-black text-white tracking-tighter gold-text leading-none">R$ 18.450,20</h3>
+            <p className="text-[9px] sm:text-[10px] font-bold text-emerald-500 mt-4 flex items-center gap-2 uppercase tracking-widest leading-none">
+              <ArrowUpRight className="w-3 h-3 text-[10px]" /> Rendimento +15%
             </p>
           </div>
         </div>
 
-        <div className="luxury-card p-10 border-white/5 luxury-gradient relative overflow-hidden group">
+        <div className="luxury-card p-8 sm:p-10 border-white/5 luxury-gradient relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700"></div>
           <div className="relative z-10">
-            <div className="w-14 h-14 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mb-8 border border-rose-500/20">
-              <TrendingDown className="w-7 h-7" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mb-6 sm:mb-8 border border-rose-500/20">
+              <TrendingDown className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <p className="text-[10px] font-black uppercase text-white/30 tracking-[0.4em] mb-2 italic">Despesas Operacionais</p>
-            <h3 className="text-4xl font-serif italic font-black text-white tracking-tighter">R$ 9.120,00</h3>
-            <p className="text-[10px] font-bold text-rose-500 mt-4 flex items-center gap-2 uppercase tracking-widest leading-none">
-              <ArrowDownRight className="w-3 h-3" /> Fluxo Estável
+            <p className="text-[9px] sm:text-[10px] font-black uppercase text-white/30 tracking-[0.4em] mb-2 italic">Despesas Operacionais</p>
+            <h3 className="text-3xl sm:text-4xl font-serif italic font-black text-white tracking-tighter leading-none">R$ 9.120,00</h3>
+            <p className="text-[9px] sm:text-[10px] font-bold text-rose-500 mt-4 flex items-center gap-2 uppercase tracking-widest leading-none">
+              <ArrowDownRight className="w-3 h-3 text-[10px]" /> Fluxo Estável
             </p>
           </div>
         </div>
 
-        <div className="luxury-card p-10 border-[#c5a059]/20 bg-gradient-to-br from-[#111827] to-black relative overflow-hidden group">
+        <div className="luxury-card p-8 sm:p-10 border-[#c5a059]/20 bg-gradient-to-br from-[#111827] to-black relative overflow-hidden group sm:col-span-2 lg:col-span-1">
           <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#c5a059]/10 blur-[60px] rounded-full translate-x-16 translate-y-16 group-hover:bg-[#c5a059]/20 transition-all duration-700"></div>
           <div className="relative z-10">
-            <div className="w-14 h-14 bg-[#c5a059]/10 text-[#c5a059] rounded-2xl flex items-center justify-center mb-8 border border-[#c5a059]/30">
-              <Wallet className="w-7 h-7" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#c5a059]/10 text-[#c5a059] rounded-2xl flex items-center justify-center mb-6 sm:mb-8 border border-[#c5a059]/30">
+              <Wallet className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <p className="text-[10px] font-black uppercase text-white/40 tracking-[0.4em] mb-2 italic">Patrimônio em Caixa</p>
-            <h3 className="text-4xl font-serif italic font-black gold-text tracking-tighter">R$ 9.330,20</h3>
-            <div className="mt-8 flex gap-3">
-              <button className="flex-1 py-3 bg-[#c5a059]/10 hover:bg-[#c5a059] hover:text-[#0a0e17] rounded-xl text-[9px] font-black uppercase tracking-[0.3em] transition-all duration-500 text-[#c5a059] border border-[#c5a059]/30">Extrato</button>
-              <button className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[9px] font-black uppercase tracking-[0.3em] transition-all duration-500 text-white/60 border border-white/10 italic">Exportar PDF</button>
+            <p className="text-[9px] sm:text-[10px] font-black uppercase text-white/40 tracking-[0.4em] mb-2 italic">Patrimônio em Caixa</p>
+            <h3 className="text-3xl sm:text-4xl font-serif italic font-black gold-text tracking-tighter leading-none">R$ 9.330,20</h3>
+            <div className="mt-6 sm:mt-8 flex gap-3">
+              <button className="flex-1 py-3 bg-[#c5a059]/10 hover:bg-[#c5a059] hover:text-[#0a0e17] rounded-xl text-[8px] sm:text-[9px] font-black uppercase tracking-[0.3em] transition-all duration-500 text-[#c5a059] border border-[#c5a059]/30">Extrato</button>
+              <button className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[8px] sm:text-[9px] font-black uppercase tracking-[0.3em] transition-all duration-500 text-white/60 border border-white/10 italic">PDF</button>
             </div>
           </div>
         </div>
@@ -104,13 +104,13 @@ export default function Financeiro() {
 
       {/* Transactions List */}
       <div className="luxury-card border-white/5 overflow-hidden luxury-gradient">
-        <div className="p-10 border-b border-white/5 flex items-center justify-between flex-wrap gap-8">
-          <div className="flex items-center gap-10">
+        <div className="p-6 sm:p-10 border-b border-white/5 flex flex-col lg:flex-row lg:items-center justify-between gap-6 sm:gap-8">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-10">
              <div>
-                <h3 className="text-sm font-black uppercase tracking-[0.4em] text-white italic mb-1">Livro de Razão Elite</h3>
-                <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.3em]">Auditoria em Tempo Real</p>
+                <h3 className="text-xs sm:text-sm font-black uppercase tracking-[0.4em] text-white italic mb-1">Livro de Razão Elite</h3>
+                <p className="text-[8px] sm:text-[9px] font-bold text-white/20 uppercase tracking-[0.3em]">Auditoria em Tempo Real</p>
              </div>
-             <div className="flex bg-black/40 p-1.5 rounded-full border border-white/5">
+             <div className="flex bg-black/40 p-1 rounded-full border border-white/5 overflow-x-auto no-scrollbar">
               {[
                 { id: 'all', label: 'Tudo' },
                 { id: 'income', label: 'Proventos' },
@@ -119,52 +119,55 @@ export default function Financeiro() {
                 <button
                   key={opt.id}
                   onClick={() => setFilter(opt.id as any)}
-                  className={`px-6 py-2.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all italic duration-500 ${filter === opt.id ? 'bg-[#c5a059] text-[#0a0e17] shadow-xl' : 'text-white/30 hover:text-white'}`}
+                  className={`px-4 sm:px-6 py-2 rounded-full text-[8px] sm:text-[9px] font-black uppercase tracking-widest transition-all italic duration-500 whitespace-nowrap ${filter === opt.id ? 'bg-[#c5a059] text-[#0a0e17] shadow-xl' : 'text-white/30 hover:text-white'}`}
                 >
                   {opt.label}
                 </button>
               ))}
             </div>
           </div>
-          <button className="px-8 py-4 bg-white/10 text-white rounded-full text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 hover:bg-[#c5a059] hover:text-[#0a0e17] transition-all duration-500 italic shadow-2xl border border-white/10">
+          <button 
+            onClick={() => openModal('income')}
+            className="w-full lg:w-auto px-6 sm:px-8 py-4 bg-white/10 text-white rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:bg-[#c5a059] hover:text-[#0a0e17] transition-all duration-500 italic shadow-2xl border border-white/10"
+          >
             <Plus className="w-4 h-4" /> Registrar Movimentação
           </button>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left uppercase text-[10px] tracking-widest font-bold">
+        <div className="overflow-x-auto no-scrollbar">
+          <table className="w-full text-left uppercase text-[9px] sm:text-[10px] tracking-widest font-bold min-w-[600px]">
             <thead>
               <tr className="bg-black/20 border-b border-white/5">
-                <th className="px-10 py-6 text-white/30 font-black tracking-[0.3em] italic">Designação</th>
-                <th className="px-10 py-6 text-white/30 font-black tracking-[0.3em] text-center italic">Temporalidade</th>
-                <th className="px-10 py-6 text-white/30 font-black tracking-[0.3em] italic">Segmento</th>
-                <th className="px-10 py-6 text-white/30 font-black tracking-[0.3em] text-center italic">Status</th>
-                <th className="px-10 py-6 text-white/30 font-black tracking-[0.3em] text-right italic">Quantitativo</th>
+                <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 font-black tracking-[0.3em] italic">Designação</th>
+                <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 font-black tracking-[0.3em] text-center italic">Data</th>
+                <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 font-black tracking-[0.3em] italic">Segmento</th>
+                <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 font-black tracking-[0.3em] text-center italic">Status</th>
+                <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 font-black tracking-[0.3em] text-right italic">Valor</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {filtered.map(t => (
                 <tr key={t.id} className="hover:bg-white/5 transition-all duration-500 group">
-                  <td className="px-10 py-8">
-                    <div className="flex items-center gap-5">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border transition-all duration-500 ${t.type === 'income' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 group-hover:bg-emerald-500' : 'bg-rose-500/10 text-rose-500 border-rose-500/20 group-hover:bg-rose-500'} group-hover:text-white`}>
-                        {t.type === 'income' ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownRight className="w-5 h-5" />}
+                  <td className="px-6 sm:px-10 py-6 sm:py-8">
+                    <div className="flex items-center gap-3 sm:gap-5">
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center border transition-all duration-500 shrink-0 ${t.type === 'income' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 group-hover:bg-emerald-500' : 'bg-rose-500/10 text-rose-500 border-rose-500/20 group-hover:bg-rose-500'} group-hover:text-white`}>
+                        {t.type === 'income' ? <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" /> : <ArrowDownRight className="w-4 h-4 sm:w-5 sm:h-5" />}
                       </div>
-                      <span className="text-sm font-serif italic font-bold text-white group-hover:text-[#c5a059] transition-colors">{t.description}</span>
+                      <span className="text-xs sm:text-sm font-serif italic font-bold text-white group-hover:text-[#c5a059] transition-colors truncate max-w-[150px] sm:max-w-none">{t.description}</span>
                     </div>
                   </td>
-                  <td className="px-10 py-8 text-center text-white/30">
+                  <td className="px-6 sm:px-10 py-6 sm:py-8 text-center text-white/30 whitespace-nowrap">
                     {t.date}
                   </td>
-                  <td className="px-10 py-8">
-                    <span className="bg-white/5 px-4 py-1.5 rounded-full border border-white/10 text-white/40">{t.category}</span>
+                  <td className="px-6 sm:px-10 py-6 sm:py-8">
+                    <span className="bg-white/5 px-3 sm:px-4 py-1 rounded-full border border-white/10 text-white/40 whitespace-nowrap">{t.category}</span>
                   </td>
-                  <td className="px-10 py-8 text-center">
-                    <span className={`px-4 py-1.5 rounded-full border shrink-0 ${t.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-amber-500/10 text-amber-500 border-amber-500/20'}`}>
+                  <td className="px-6 sm:px-10 py-6 sm:py-8 text-center">
+                    <span className={`px-3 sm:px-4 py-1 rounded-full border shrink-0 text-[8px] sm:text-[9px] ${t.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-amber-500/10 text-amber-500 border-amber-500/20'}`}>
                       {t.status === 'paid' ? 'LIQUIDADO' : 'PENDENTE'}
                     </span>
                   </td>
-                  <td className={`px-10 py-8 text-right font-serif italic text-lg tracking-tighter ${t.type === 'income' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                  <td className={`px-6 sm:px-10 py-6 sm:py-8 text-right font-serif italic text-base sm:text-lg tracking-tighter whitespace-nowrap ${t.type === 'income' ? 'text-emerald-500' : 'text-rose-500'}`}>
                     {t.type === 'income' ? '+' : '-'} R$ {t.amount.toFixed(2)}
                   </td>
                 </tr>

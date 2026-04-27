@@ -73,27 +73,27 @@ export default function CRM() {
 
   return (
     <div className="flex flex-col h-full gap-8">
-      <div className="flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-6 flex-1 max-w-xl">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 shrink-0">
+        <div className="flex items-center gap-4 sm:gap-6 flex-1 max-w-xl">
            <div className="relative flex-1 group">
              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#c5a059] w-4 h-4 transition-colors" />
              <input 
                type="text" 
-               placeholder="MAPPING ELITE: Pesquisar conexões..."
-               className="w-full pl-12 pr-6 py-4 bg-white/5 border border-white/5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] italic text-white outline-none focus:border-[#c5a059]/30 transition-all placeholder:text-white/10"
+               placeholder="PESQUISAR CONEXÕES..."
+               className="w-full pl-12 pr-6 py-4 bg-white/5 border border-white/5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] italic text-white outline-none focus:border-[#c5a059]/30 transition-all placeholder:text-white/10"
              />
            </div>
            {loading && <Loader2 className="w-5 h-5 text-[#c5a059] animate-spin" />}
         </div>
-        <button className="px-8 py-4 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 hover:scale-[1.05] transition-all shadow-2xl shadow-[#c5a059]/20 italic">
+        <button className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:scale-[1.05] transition-all shadow-2xl shadow-[#c5a059]/20 italic shrink-0">
           <Plus className="w-5 h-5" />
           Capturar Lead
         </button>
       </div>
 
-      <div className="flex gap-8 overflow-x-auto pb-6 flex-1 custom-scrollbar">
+      <div className="flex gap-6 sm:gap-8 overflow-x-auto pb-6 flex-1 custom-scrollbar no-scrollbar">
         {columns.map(column => (
-          <div key={column.id} className="min-w-[320px] w-96 bg-white/5 rounded-[3rem] p-6 flex flex-col gap-6 border border-white/5 luxury-gradient">
+          <div key={column.id} className="min-w-[280px] sm:min-w-[320px] w-80 sm:w-96 bg-white/5 rounded-[2.5rem] sm:rounded-[3rem] p-6 flex flex-col gap-6 border border-white/5 luxury-gradient">
              <div className="flex items-center justify-between px-2">
                 <div className="flex items-center gap-4">
                    <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">{column.title}</h3>

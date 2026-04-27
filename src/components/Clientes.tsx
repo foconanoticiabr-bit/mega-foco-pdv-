@@ -30,23 +30,23 @@ export default function Clientes() {
 
   return (
     <div className="space-y-12">
-      <div className="flex items-center justify-between flex-wrap gap-8">
-        <div className="flex items-center gap-6 flex-1 max-w-xl">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 sm:gap-8">
+        <div className="flex items-center gap-4 sm:gap-6 flex-1 max-w-xl">
            <div className="relative flex-1 group">
              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#c5a059] w-5 h-5 transition-colors" />
              <input 
                type="text" 
-               placeholder="MAPPING ELITE: Pesquisar rede de contatos..."
-               className="w-full pl-16 pr-6 py-6 bg-white/5 border border-white/5 rounded-full shadow-2xl focus:border-[#c5a059]/30 outline-none font-bold text-xs uppercase tracking-[0.2em] text-white placeholder:text-white/10 transition-all italic"
+               placeholder="PESQUISAR REDE DE CONTATOS..."
+               className="w-full pl-12 sm:pl-16 pr-6 py-4 sm:py-6 bg-white/5 border border-white/5 rounded-full shadow-2xl focus:border-[#c5a059]/30 outline-none font-bold text-[9px] sm:text-xs uppercase tracking-[0.2em] text-white placeholder:text-white/10 transition-all italic"
                value={searchTerm}
                onChange={(e) => setSearchTerm(e.target.value)}
              />
            </div>
-           <button className="p-5 bg-white/5 border border-white/5 rounded-2xl text-white/20 hover:text-[#c5a059] hover:border-[#c5a059]/30 transition-all luxury-gradient">
-             <Filter className="w-6 h-6" />
+           <button className="p-4 sm:p-5 bg-white/5 border border-white/5 rounded-2xl text-white/20 hover:text-[#c5a059] hover:border-[#c5a059]/30 transition-all luxury-gradient shrink-0">
+             <Filter className="w-5 h-5 sm:w-6 sm:h-6" />
            </button>
         </div>
-        <button className="px-10 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-3 shadow-2xl shadow-[#c5a059]/20 hover:scale-[1.02] transition-all italic">
+        <button className="w-full sm:w-auto px-8 sm:px-10 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 shadow-2xl shadow-[#c5a059]/20 hover:scale-[1.02] transition-all italic shrink-0">
           <Plus className="w-5 h-5" />
           Novo Ativo
         </button>

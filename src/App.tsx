@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShoppingBag, 
   ClipboardList, 
@@ -42,7 +42,10 @@ import {
   Target,
   TrendingUp,
   Instagram,
-  Facebook
+  Facebook,
+  MessageCircle,
+  Phone,
+  Send
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import PDV from './components/PDV';
@@ -78,7 +81,8 @@ type Section =
   | 'admin_panel'
   | 'indication'
   | 'privacy'
-  | 'signup';
+  | 'signup'
+  | 'login';
 
 export default function App() {
   const [currentSection, setCurrentSection] = useState<Section>('landing');
@@ -95,6 +99,13 @@ export default function App() {
   };
 
   const [currentPixKey, setCurrentPixKey] = useState(pixKeys.primary);
+  const [showSupport, setShowSupport] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const contactNumbers = [
+    { label: "Suporte & Vendas 1", value: "62995108558", display: "(62) 99510-8558" },
+    { label: "Suporte & Vendas 2", value: "74981188134", display: "(74) 98118-8134" }
+  ];
 
   const handleCopyPix = (text?: string) => {
     const toCopy = text || (mpPixData?.qr_code) || currentPixKey;
@@ -252,15 +263,15 @@ export default function App() {
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#2563eb 0.5px, transparent 0.5px)', backgroundSize: '24px 24px' }}></div>
       {/* Navigation */}
-      <nav className="fixed top-8 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl z-50 bg-[#0a0e17]/80 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-        <div className="px-10 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#f9d976] to-[#c5a059] rounded-full flex items-center justify-center text-[#0a0e17] font-black italic shadow-lg">M</div>
-            <span className="text-2xl font-black tracking-tighter uppercase italic gold-text">MegaFoco <span className="text-white opacity-80">PDV</span></span>
+      <nav className="fixed top-4 sm:top-8 left-1/2 -translate-x-1/2 w-[95%] sm:w-[90%] max-w-7xl z-50 bg-[#0a0e17]/80 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+        <div className="px-6 sm:px-10 h-16 sm:h-20 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-[#f9d976] to-[#c5a059] rounded-full flex items-center justify-center text-[#0a0e17] text-sm sm:text-base font-black italic shadow-lg">M</div>
+            <span className="text-lg sm:text-2xl font-black tracking-tighter uppercase italic gold-text">MegaFoco <span className="text-white opacity-80 hidden xs:inline">PDV</span></span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             <button 
-              onClick={() => setCurrentSection('dashboard')}
+              onClick={() => setCurrentSection('login')}
               className="text-sm font-bold text-white/60 hover:text-white transition-all uppercase tracking-widest"
             >
               Já sou cliente
@@ -273,43 +284,79 @@ export default function App() {
             </button>
           </div>
           <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <Smartphone className="w-6 h-6" />
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Smartphone className="w-6 h-6" />}
           </button>
         </div>
+
+        {/* Mobile Menu Content */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, scaleY: 0, originY: 0 }}
+              animate={{ opacity: 1, scaleY: 1 }}
+              exit={{ opacity: 0, scaleY: 0 }}
+              className="absolute top-full left-0 w-full bg-[#0a0e17]/95 backdrop-blur-3xl border border-white/10 rounded-[2rem] mt-4 p-8 space-y-6 md:hidden overflow-hidden"
+            >
+              <button 
+                onClick={() => { setCurrentSection('login'); setIsMenuOpen(false); }}
+                className="w-full flex items-center gap-4 text-xl font-black text-white/60 hover:text-white transition-all uppercase italic"
+              >
+                <UserCircle className="w-6 h-6 text-[#c5a059]" />
+                Já sou cliente
+              </button>
+              <button 
+                onClick={() => { setCurrentSection('signup'); setIsMenuOpen(false); }}
+                className="w-full py-6 font-black text-[#0a0e17] bg-gradient-to-r from-[#f9d976] to-[#c5a059] rounded-2xl transition-all uppercase italic shadow-lg shadow-[#c5a059]/20"
+              >
+                Começar Grátis
+              </button>
+              <div className="pt-6 border-t border-white/5 space-y-4">
+                 {['Recursos', 'Preços', 'Parceiros'].map((item) => (
+                   <button 
+                    key={item}
+                    className="w-full text-left text-[10px] font-bold text-white/30 uppercase tracking-[0.4em] hover:text-[#c5a059] transition-all"
+                   >
+                     {item}
+                   </button>
+                 ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero */}
-      <section className="pt-60 pb-40 px-4 flex flex-col items-center text-center relative overflow-hidden">
+      <section className="pt-40 md:pt-60 pb-20 md:pb-40 px-4 flex flex-col items-center text-center relative overflow-hidden">
         {/* Glow effect */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#c5a059]/5 blur-[150px] rounded-full pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-[#c5a059]/5 blur-[80px] md:blur-[150px] rounded-full pointer-events-none"></div>
         
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           className="max-w-6xl relative z-10"
         >
-          <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-[#c5a059] text-xs font-bold uppercase tracking-[0.3em] mb-12 italic">
-            <ShieldCheck className="w-4 h-4" />
+          <div className="inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 rounded-full bg-white/5 border border-white/10 text-[#c5a059] text-[9px] md:text-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] mb-8 md:mb-12 italic">
+            <ShieldCheck className="w-4 h-4 shrink-0" />
             A Excelência em Gestão para Negócios de Elite
           </div>
-          <h1 className="text-7xl md:text-[10rem] font-serif font-black tracking-tighter mb-10 leading-[0.85] text-white uppercase italic">
+          <h1 className="text-4xl xs:text-5xl md:text-[10rem] font-serif font-black tracking-tighter mb-8 md:mb-10 leading-[0.9] md:leading-[0.85] text-white uppercase italic">
             DOMINE O SEU <br/>
             <span className="gold-text">DESTINO</span>
           </h1>
-          <p className="text-2xl md:text-3xl text-white/60 mb-16 max-w-4xl mx-auto font-light leading-relaxed tracking-wide">
+          <p className="text-lg md:text-3xl text-white/60 mb-12 md:mb-16 max-w-4xl mx-auto font-light leading-relaxed tracking-wide px-4">
             A sofisticação da tecnologia ao serviço da sua gestão. PDV, Financeiro e Marketing integrados em uma experiência transcendental.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-10">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
             <button 
                onClick={() => setCurrentSection('signup')}
-               className="w-full sm:w-auto px-16 py-8 text-3xl font-black text-[#0a0e17] bg-gradient-to-b from-[#f9d976] to-[#c5a059] rounded-full hover:scale-105 active:scale-95 transition-all uppercase italic shadow-[0_20px_50px_rgba(197,160,89,0.3)]"
+               className="w-full md:w-auto px-10 md:px-16 py-6 md:py-8 text-xl md:text-3xl font-black text-[#0a0e17] bg-gradient-to-b from-[#f9d976] to-[#c5a059] rounded-full hover:scale-105 active:scale-95 transition-all uppercase italic shadow-[0_20px_50px_rgba(197,160,89,0.3)]"
             >
               ELEVAR MEU NEGÓCIO
-              <ChevronRight className="w-10 h-10 inline-block ml-4" />
+              <ChevronRight className="w-6 h-6 md:w-10 md:h-10 inline-block ml-2 md:ml-4" />
             </button>
-            <div className="flex items-center gap-8 text-[11px] font-bold text-white/40 uppercase tracking-[0.4em]">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-[9px] md:text-[11px] font-bold text-white/40 uppercase tracking-[0.2em] md:tracking-[0.4em]">
                <span>✓ Free Full Access</span>
-               <span className="w-2 h-2 rounded-full bg-[#c5a059]"></span>
+               <span className="hidden md:inline-block w-2 h-2 rounded-full bg-[#c5a059]"></span>
                <span>✓ No Credit Card</span>
             </div>
           </div>
@@ -337,7 +384,7 @@ export default function App() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5a059] text-[#0a0e17] text-[10px] font-black uppercase tracking-widest mb-10 italic">
                 NOVO — CRM ELITE
               </div>
-              <h2 className="text-5xl md:text-8xl font-serif font-black tracking-tighter text-white uppercase leading-[0.85] mb-10 italic">
+              <h2 className="text-4xl sm:text-5xl md:text-8xl font-serif font-black tracking-tighter text-white uppercase leading-[0.85] mb-10 italic">
                 Fidelização em <br/>
                 <span className="gold-text">Estado Criativo</span>
               </h2>
@@ -487,7 +534,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto relative z-10">
              <div className="text-center mb-32">
                 <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-[#c5a059] mb-6 inline-block italic border-b border-[#c5a059] pb-2">Assinaturas</h3>
-                <h2 className="text-5xl md:text-8xl font-serif font-black tracking-tighter text-white uppercase leading-none mb-16 italic">Escolha sua <br/> <span className="gold-text">Liderança</span></h2>
+                <h2 className="text-4xl xs:text-5xl md:text-8xl font-serif font-black tracking-tighter text-white uppercase leading-none mb-16 italic">Escolha sua <br/> <span className="gold-text">Liderança</span></h2>
                 
                 {/* Plan Categories Tabs */}
                 <div className="flex flex-wrap justify-center gap-4 mb-20">
@@ -788,14 +835,10 @@ export default function App() {
     </div>
   );
 
-  const Dashboard = () => (
-    <div className="flex h-screen bg-[#05080d] font-display relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#c5a059]/5 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-      
-      {/* Sidebar Desktop */}
-      <aside className="hidden lg:flex w-80 bg-[#05080d] text-white flex-col p-8 shrink-0 overflow-y-auto custom-scrollbar border-r border-white/5 shadow-2xl">
-         <div className="flex items-center gap-4 mb-16">
+  const Dashboard = () => {
+    const SidebarContent = () => (
+      <>
+         <div className="flex items-center gap-4 mb-16 px-4 lg:px-0">
             <div className="w-14 h-14 bg-gradient-to-br from-[#f9d976] to-[#c5a059] rounded-2xl flex items-center justify-center text-[#0a0e17] text-2xl font-black italic shadow-lg">M</div>
             <div className="flex flex-col">
                <span className="text-2xl font-serif font-black tracking-tighter uppercase leading-[0.8] mb-1 italic gold-text">MegaFoco</span>
@@ -803,7 +846,7 @@ export default function App() {
             </div>
          </div>
 
-         <div className="space-y-10 flex-1">
+         <div className="space-y-10 flex-1 px-4 lg:px-0">
             {/* Principal */}
             <div>
               <p className="text-[10px] font-bold uppercase text-white/20 tracking-[0.4em] mb-6 ml-2 italic">Principal</p>
@@ -815,7 +858,10 @@ export default function App() {
                 ].map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setCurrentSection(item.id as Section)}
+                    onClick={() => {
+                      setCurrentSection(item.id as Section);
+                      setIsSidebarOpen(false);
+                    }}
                     className={`w-full flex items-center gap-4 px-6 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${currentSection === item.id ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059] shadow-xl shadow-[#c5a059]/10' : 'text-white/40 border-transparent hover:bg-white/5 hover:text-white'}`}
                   >
                     {item.icon}
@@ -836,7 +882,10 @@ export default function App() {
                 ].map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setCurrentSection(item.id as Section)}
+                    onClick={() => {
+                      setCurrentSection(item.id as Section);
+                      setIsSidebarOpen(false);
+                    }}
                     className={`w-full flex items-center gap-4 px-6 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${currentSection === item.id ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059] shadow-xl shadow-[#c5a059]/10' : 'text-white/40 border-transparent hover:bg-white/5 hover:text-white'}`}
                   >
                     {item.icon}
@@ -858,7 +907,10 @@ export default function App() {
                 ].map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setCurrentSection(item.id as Section)}
+                    onClick={() => {
+                      setCurrentSection(item.id as Section);
+                      setIsSidebarOpen(false);
+                    }}
                     className={`w-full flex items-center gap-4 px-6 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${currentSection === item.id ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059] shadow-xl shadow-[#c5a059]/10' : 'text-white/40 border-transparent hover:bg-white/5 hover:text-white'}`}
                   >
                     {item.icon}
@@ -879,7 +931,10 @@ export default function App() {
                 ].map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setCurrentSection(item.id as Section)}
+                    onClick={() => {
+                      setCurrentSection(item.id as Section);
+                      setIsSidebarOpen(false);
+                    }}
                     className={`w-full flex items-center gap-4 px-6 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${currentSection === item.id ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059] shadow-xl shadow-[#c5a059]/10' : 'text-white/40 border-transparent hover:bg-white/5 hover:text-white'}`}
                   >
                     {item.icon}
@@ -900,7 +955,10 @@ export default function App() {
                 ].map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setCurrentSection(item.id as Section)}
+                    onClick={() => {
+                      setCurrentSection(item.id as Section);
+                      setIsSidebarOpen(false);
+                    }}
                     className={`w-full flex items-center gap-4 px-6 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${currentSection === item.id ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059] shadow-xl shadow-[#c5a059]/10' : 'text-white/40 border-transparent hover:bg-white/5 hover:text-white'}`}
                   >
                     {item.icon}
@@ -919,7 +977,10 @@ export default function App() {
                 ].map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setCurrentSection(item.id as Section)}
+                    onClick={() => {
+                      setCurrentSection(item.id as Section);
+                      setIsSidebarOpen(false);
+                    }}
                     className={`w-full flex items-center gap-4 px-6 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${currentSection === item.id ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059] shadow-xl shadow-[#c5a059]/10' : 'text-white/40 border-transparent hover:bg-white/5 hover:text-white'}`}
                   >
                     {item.icon}
@@ -929,26 +990,7 @@ export default function App() {
               </nav>
             </div>
 
-            {/* Ferramentas */}
-            <div>
-              <p className="text-[10px] font-bold uppercase text-white/20 tracking-[0.4em] mb-6 ml-2 italic">Ferramentas</p>
-              <nav className="space-y-3">
-                {[
-                  { id: 'calc', icon: <Calculator className="w-5 h-5" />, label: 'Calculadora' },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setCurrentSection(item.id as Section)}
-                    className={`w-full flex items-center gap-4 px-6 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${currentSection === item.id ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059] shadow-xl shadow-[#c5a059]/10' : 'text-white/40 border-transparent hover:bg-white/5 hover:text-white'}`}
-                  >
-                    {item.icon}
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
-            </div>
-
-            {/* Admin */}
+            {/* Administrador */}
             <div>
               <p className="text-[10px] font-bold uppercase text-white/20 tracking-[0.4em] mb-6 ml-2 italic">Administração</p>
               <nav className="space-y-3">
@@ -959,7 +1001,10 @@ export default function App() {
                 ].map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setCurrentSection(item.id as Section)}
+                    onClick={() => {
+                      setCurrentSection(item.id as Section);
+                      setIsSidebarOpen(false);
+                    }}
                     className={`w-full flex items-center gap-4 px-6 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${currentSection === item.id ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059] shadow-xl shadow-[#c5a059]/10' : 'text-white/40 border-transparent hover:bg-white/5 hover:text-white'}`}
                   >
                     {item.icon}
@@ -970,7 +1015,7 @@ export default function App() {
             </div>
          </div>
 
-         <div className="mt-10 pt-6 border-t border-white/5 space-y-6">
+         <div className="mt-10 pt-6 border-t border-white/5 space-y-6 px-4 lg:px-0">
             <div className="flex items-center gap-4 px-2">
                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 shadow-lg luxury-gradient">
                   <UserCircle className="w-6 h-6 text-[#c5a059]" />
@@ -988,33 +1033,82 @@ export default function App() {
                Derrubar Conexão
             </button>
          </div>
-      </aside>
+      </>
+    );
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0">
-         {/* Navigation Bar */}
-         <header className="h-24 bg-[#0a0e17] border-b border-white/5 px-12 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-5">
-               <div className="w-3 h-3 rounded-full bg-[#10b981] animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.4)]"></div>
-               <h2 className="text-[11px] font-bold uppercase tracking-[0.5em] text-white/30 italic">Infraestrutura em Tempo Real</h2>
-            </div>
-            
-            <div className="flex items-center gap-6">
-               <div className="hidden sm:flex items-center gap-3 px-5 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 italic">
-                  <Clock className="w-4 h-4 text-[#c5a059]" />
-                  Uptime: 99.9%
-               </div>
-               <button 
-                  onClick={() => setCurrentSection('landing')}
-                  className="px-8 py-3 bg-white/5 border border-white/20 text-white hover:bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] transition-all italic"
+    return (
+      <div className="flex h-screen bg-[#05080d] font-display relative overflow-hidden">
+        {/* Background glow */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#c5a059]/5 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+        
+        {/* Sidebar Desktop */}
+        <aside className="hidden lg:flex w-80 bg-[#05080d] text-white flex-col p-8 shrink-0 overflow-y-auto custom-scrollbar border-r border-white/5 shadow-2xl">
+           <SidebarContent />
+        </aside>
+
+        {/* Mobile Sidebar (Drawer) */}
+        <AnimatePresence mode="wait">
+           {isSidebarOpen && (
+             <React.Fragment key="mobile-sidebar">
+               <motion.div
+                 initial={{ opacity: 0 }}
+                 animate={{ opacity: 1 }}
+                 exit={{ opacity: 0 }}
+                 onClick={() => setIsSidebarOpen(false)}
+                 className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] lg:hidden"
+               />
+               <motion.aside
+                 initial={{ x: '-100%' }}
+                 animate={{ x: 0 }}
+                 exit={{ x: '-100%' }}
+                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                 className="fixed inset-y-0 left-0 w-80 bg-[#05080d] z-[70] p-8 flex flex-col overflow-y-auto lg:hidden border-r border-white/10 shadow-2xl"
                >
-                  VISTA PÚBLICA
-               </button>
-            </div>
-         </header>
+                  <button 
+                    onClick={() => setIsSidebarOpen(false)}
+                    className="absolute top-6 right-6 p-2 text-white/40 hover:text-white"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                  <SidebarContent />
+               </motion.aside>
+             </React.Fragment>
+           )}
+        </AnimatePresence>
 
-         {/* Content Scrollable */}
-         <div className="flex-1 overflow-y-auto p-12 bg-[#05080d] custom-scrollbar">
+        {/* Main Content Area */}
+        <main className="flex-1 flex flex-col min-w-0">
+           {/* Navigation Bar */}
+           <header className="h-24 bg-[#0a0e17] border-b border-white/5 px-6 sm:px-12 flex items-center justify-between shrink-0 relative z-50">
+              <div className="flex items-center gap-4 sm:gap-5">
+                 <button 
+                   onClick={() => setIsSidebarOpen(true)}
+                   className="p-2 -ml-2 text-white/60 hover:text-white lg:hidden"
+                 >
+                   <Smartphone className="w-6 h-6" />
+                 </button>
+                 <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#10b981] animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.4)]"></div>
+                    <h2 className="text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.5em] text-white/30 italic">Infraestrutura</h2>
+                 </div>
+              </div>
+              
+              <div className="flex items-center gap-3 sm:gap-6">
+                 <div className="hidden sm:flex items-center gap-3 px-5 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 italic">
+                    <Clock className="w-4 h-4 text-[#c5a059]" />
+                    99.9%
+                 </div>
+                 <button 
+                    onClick={() => setCurrentSection('landing')}
+                    className="px-4 py-2 bg-white/5 border border-white/20 text-white hover:bg-white/10 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] transition-all italic whitespace-nowrap"
+                 >
+                    SAIR
+                 </button>
+              </div>
+           </header>
+
+           {/* Content Scrollable */}
+           <div className="flex-1 overflow-y-auto p-6 sm:p-12 bg-[#05080d] custom-scrollbar">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentSection}
@@ -1162,6 +1256,7 @@ export default function App() {
          </main>
       </div>
     );
+  };
 
   const SignupPage = () => {
     const [formData, setFormData] = useState({ name: '', email: '', business: '' });
@@ -1175,41 +1270,41 @@ export default function App() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="w-full max-w-lg bg-[#0a0e17] p-16 rounded-[4rem] border border-white/5 shadow-2xl relative z-10 luxury-gradient"
+          className="w-full max-w-lg bg-[#0a0e17] p-8 sm:p-16 sm:rounded-[4rem] rounded-[2.5rem] border border-white/5 shadow-2xl relative z-10 luxury-gradient"
         >
-          <div className="text-center mb-12">
-            <div className="w-20 h-20 bg-gradient-to-br from-[#f9d976] to-[#c5a059] rounded-[2rem] flex items-center justify-center text-[#0a0e17] text-4xl font-black italic mx-auto mb-8 shadow-2xl shadow-[#c5a059]/20">M</div>
-            <h2 className="text-4xl font-serif font-black tracking-tighter text-white uppercase italic leading-none mb-4">Protocolo de Adesão</h2>
-            <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.5em] italic">Inicie sua jornada Elite no PDV</p>
+          <div className="text-center mb-10 sm:mb-12">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-[#f9d976] to-[#c5a059] rounded-2xl sm:rounded-[2rem] flex items-center justify-center text-[#0a0e17] text-3xl sm:text-4xl font-black italic mx-auto mb-6 sm:mb-8 shadow-2xl shadow-[#c5a059]/20">M</div>
+            <h2 className="text-3xl sm:text-4xl font-serif font-black tracking-tighter text-white uppercase italic leading-none mb-4">Protocolo de Adesão</h2>
+            <p className="text-[9px] sm:text-[10px] font-bold text-white/30 uppercase tracking-[0.5em] italic leading-relaxed">Inicie sua jornada Elite no PDV</p>
           </div>
           
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div className="group">
-              <p className="text-[10px] font-bold uppercase text-[#c5a059] tracking-[0.4em] mb-3 ml-4 italic">Designação do Proprietário</p>
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase text-[#c5a059] tracking-[0.4em] mb-2 sm:mb-3 ml-4 italic">Designação do Proprietário</p>
               <input 
                 type="text" 
                 placeholder="NOME COMPLETO DO TITULAR" 
-                className="w-full p-6 bg-white/5 border border-white/5 rounded-3xl font-bold text-white placeholder:text-white/10 focus:ring-2 focus:ring-[#c5a059]/20 outline-none transition-all uppercase tracking-widest text-xs"
+                className="w-full sm:p-6 p-5 bg-white/5 border border-white/5 rounded-2xl sm:rounded-3xl font-bold text-white placeholder:text-white/10 focus:ring-2 focus:ring-[#c5a059]/20 outline-none transition-all uppercase tracking-widest text-[10px] sm:text-xs"
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
               />
             </div>
             <div className="group">
-              <p className="text-[10px] font-bold uppercase text-[#c5a059] tracking-[0.4em] mb-3 ml-4 italic">Canal de Comunicação Elite</p>
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase text-[#c5a059] tracking-[0.4em] mb-2 sm:mb-3 ml-4 italic">Canal de Comunicação Elite</p>
               <input 
                 type="email" 
                 placeholder="SEU@EMAIL.PREMIUM" 
-                className="w-full p-6 bg-white/5 border border-white/5 rounded-3xl font-bold text-white placeholder:text-white/10 focus:ring-2 focus:ring-[#c5a059]/20 outline-none transition-all uppercase tracking-widest text-xs"
+                className="w-full sm:p-6 p-5 bg-white/5 border border-white/5 rounded-2xl sm:rounded-3xl font-bold text-white placeholder:text-white/10 focus:ring-2 focus:ring-[#c5a059]/20 outline-none transition-all uppercase tracking-widest text-[10px] sm:text-xs"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
               />
             </div>
             <div className="group">
-              <p className="text-[10px] font-bold uppercase text-[#c5a059] tracking-[0.4em] mb-3 ml-4 italic">Identidade Corporativa</p>
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase text-[#c5a059] tracking-[0.4em] mb-2 sm:mb-3 ml-4 italic">Identidade Corporativa</p>
               <input 
                 type="text" 
                 placeholder="EX: ATELIER DE LUXO MATRIZ" 
-                className="w-full p-6 bg-white/5 border border-white/5 rounded-3xl font-bold text-white placeholder:text-white/10 focus:ring-2 focus:ring-[#c5a059]/20 outline-none transition-all uppercase tracking-widest text-xs"
+                className="w-full sm:p-6 p-5 bg-white/5 border border-white/5 rounded-2xl sm:rounded-3xl font-bold text-white placeholder:text-white/10 focus:ring-2 focus:ring-[#c5a059]/20 outline-none transition-all uppercase tracking-widest text-[10px] sm:text-xs"
                 value={formData.business}
                 onChange={(e) => setFormData({...formData, business: e.target.value})}
               />
@@ -1217,12 +1312,12 @@ export default function App() {
             
             <button 
               onClick={() => setCurrentSection('dashboard')}
-              className="w-full py-7 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full font-black uppercase tracking-[0.4em] text-xs hover:scale-[1.02] transition-all shadow-2xl shadow-[#c5a059]/30 mt-10"
+              className="w-full sm:py-7 py-6 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full font-black uppercase tracking-[0.4em] text-[10px] sm:text-xs hover:scale-[1.02] transition-all shadow-2xl shadow-[#c5a059]/30 mt-6 sm:mt-10"
             >
               CRIAR ACESSO IMEDIATO
             </button>
             
-            <p className="text-[9px] text-center font-bold text-white/20 uppercase tracking-[0.2em] mt-8 italic px-4">
+            <p className="text-[8px] sm:text-[9px] text-center font-bold text-white/20 uppercase tracking-[0.2em] mt-6 sm:mt-8 italic px-4 leading-relaxed">
               Ao confirmar, você ratifica nossos <span className="text-[#c5a059] underline underline-offset-4 decoration-1">Protocolos de Uso & Ética Platinum</span>
             </p>
           </div>
@@ -1231,8 +1326,135 @@ export default function App() {
     );
   };
 
+  const LoginPage = () => {
+    const [loginData, setLoginData] = useState({ email: '', password: '' });
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+    const handleLogin = async () => {
+      setIsLoggingIn(true);
+      // Simulate login delay
+      setTimeout(() => {
+        setIsLoggingIn(false);
+        // For now, allow any non-empty login to transition to dashboard
+        // Real validation would happen with Firebase
+        if (loginData.email && loginData.password) {
+           setCurrentSection('dashboard');
+        } else {
+           alert("Por favor, insira suas credenciais Elite.");
+        }
+      }, 1500);
+    };
+
+    return (
+      <div className="min-h-screen bg-[#05080d] flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#2563eb 0.5px, transparent 0.5px)', backgroundSize: '24px 24px' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#c5a059]/5 blur-[150px] rounded-full pointer-events-none"></div>
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-lg bg-[#0a0e17] sm:rounded-[3.5rem] rounded-[2rem] p-8 sm:p-16 border border-white/10 shadow-2xl luxury-gradient relative z-10"
+        >
+          <div className="flex flex-col items-center text-center mb-12">
+            <div className="w-16 h-16 bg-gradient-to-br from-[#f9d976] to-[#c5a059] rounded-2xl flex items-center justify-center text-[#0a0e17] shadow-xl mb-8">
+              <Lock className="w-8 h-8" />
+            </div>
+            <h2 className="text-3xl font-serif font-black text-white uppercase tracking-tight italic mb-4">Acesso Exclusivo</h2>
+            <p className="text-[10px] font-black text-[#c5a059] uppercase tracking-[0.4em] italic leading-relaxed">
+              Painel Restrito para Membros Elite<br/>
+              Acesse sua infraestrutura de gestão
+            </p>
+          </div>
+
+          <div className="space-y-4 sm:space-y-6">
+            <div className="group">
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase text-[#c5a059] tracking-[0.4em] mb-2 sm:mb-3 ml-4 italic">Credencial (Email)</p>
+              <input 
+                type="email" 
+                placeholder="SEU@EMAIL.ELITE" 
+                className="w-full sm:p-6 p-5 bg-white/5 border border-white/5 rounded-2xl sm:rounded-3xl font-bold text-white placeholder:text-white/10 focus:ring-2 focus:ring-[#c5a059]/20 outline-none transition-all uppercase tracking-widest text-[10px] sm:text-xs"
+                value={loginData.email}
+                onChange={(e) => setLoginData({...loginData, email: e.target.value})}
+              />
+            </div>
+            <div className="group">
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase text-[#c5a059] tracking-[0.4em] mb-2 sm:mb-3 ml-4 italic">Código de Acesso</p>
+              <input 
+                type="password" 
+                placeholder="••••••••" 
+                className="w-full sm:p-6 p-5 bg-white/5 border border-white/5 rounded-2xl sm:rounded-3xl font-bold text-white placeholder:text-white/10 focus:ring-2 focus:ring-[#c5a059]/20 outline-none transition-all uppercase tracking-widest text-[10px] sm:text-xs"
+                value={loginData.password}
+                onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+              />
+            </div>
+            
+            <button 
+              onClick={handleLogin}
+              disabled={isLoggingIn}
+              className="w-full sm:py-7 py-6 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full font-black uppercase tracking-[0.4em] text-[10px] sm:text-xs hover:scale-[1.02] transition-all shadow-2xl shadow-[#c5a059]/30 mt-6 sm:mt-10 flex items-center justify-center gap-3 disabled:opacity-50"
+            >
+              {isLoggingIn ? <span className="animate-pulse">AUTENTICANDO...</span> : "ENTRAR NO SISTEMA"}
+            </button>
+            
+            <button 
+              onClick={() => setCurrentSection('landing')}
+              className="w-full text-[9px] sm:text-[10px] font-black text-white/20 uppercase tracking-[0.3em] hover:text-[#c5a059] transition-all mt-4 italic"
+            >
+              Voltar para vitrine
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  };
+
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-hidden relative">
+      {/* Floating Support Button */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+        <AnimatePresence>
+          {showSupport && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.9 }}
+              className="bg-[#0a0e17] border border-white/10 rounded-2xl p-4 shadow-2xl mb-2 w-72 backdrop-blur-xl"
+            >
+              <h4 className="text-[10px] font-black text-[#c5a059] uppercase tracking-widest mb-4">Canais de Atendimento</h4>
+              <div className="space-y-3">
+                {contactNumbers.map((contact, idx) => (
+                  <div key={idx} className="p-3 bg-white/5 rounded-xl border border-white/5">
+                    <p className="text-[9px] font-bold text-white/40 mb-2 uppercase">{contact.label}</p>
+                    <div className="flex items-center justify-between gap-2">
+                       <div className="flex gap-2">
+                          <a href={`https://wa.me/55${contact.value}`} target="_blank" rel="noreferrer" className="p-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500 hover:text-white transition-all">
+                             <MessageCircle className="w-4 h-4" />
+                          </a>
+                          <a href={`tel:+55${contact.value}`} className="p-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500 hover:text-white transition-all">
+                             <Phone className="w-4 h-4" />
+                          </a>
+                          <a href={`https://t.me/+55${contact.value}`} target="_blank" rel="noreferrer" className="p-2 bg-sky-500/20 text-sky-400 rounded-lg hover:bg-sky-500 hover:text-white transition-all">
+                             <Send className="w-4 h-4" />
+                          </a>
+                       </div>
+                       <span className="text-[10px] font-mono text-white/60">{contact.display}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <button
+          onClick={() => setShowSupport(!showSupport)}
+          className="w-14 h-14 bg-gradient-to-br from-[#f9d976] to-[#c5a059] rounded-full flex items-center justify-center text-[#0a0e17] shadow-xl shadow-[#c5a059]/20 hover:scale-110 active:scale-95 transition-all"
+        >
+          <motion.div animate={{ rotate: showSupport ? 90 : 0 }}>
+            {showSupport ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+          </motion.div>
+        </button>
+      </div>
+
       <AnimatePresence mode="wait">
         {currentSection === 'landing' ? (
           <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -1241,6 +1463,10 @@ export default function App() {
         ) : currentSection === 'signup' ? (
           <motion.div key="signup" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <SignupPage />
+          </motion.div>
+        ) : currentSection === 'login' ? (
+          <motion.div key="login" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <LoginPage />
           </motion.div>
         ) : (
           <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
