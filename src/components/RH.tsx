@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Users, Clock, UserPlus, Briefcase, Calendar, CheckCircle2, XCircle, Search, MoreVertical } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Users, Clock, UserPlus, Briefcase, Calendar, CheckCircle2, XCircle, Search, MoreVertical, DollarSign, Plus, FileText, Trash2, CheckCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface Employee {
   id: string;
@@ -8,6 +8,16 @@ interface Employee {
   role: string;
   status: 'active' | 'on_break' | 'offline';
   lastClockIn: string;
+}
+
+interface Voucher {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  amount: number;
+  date: string;
+  status: 'approved' | 'pending' | 'rejected';
+  reason: string;
 }
 
 const EMPLOYEES: Employee[] = [
@@ -18,25 +28,61 @@ const EMPLOYEES: Employee[] = [
   { id: '5', name: 'Beatriz Costa', role: 'Recepcionista', status: 'active', lastClockIn: '08:30' },
 ];
 
+const INITIAL_VALES: Voucher[] = [
+  { id: 'v1', employeeId: '2', employeeName: 'Carlos Santos', amount: 200.00, date: '2026-04-27 15:30', status: 'approved', reason: 'Adiantamento Semanal' },
+  { id: 'v2', employeeId: '3', employeeName: 'Juliana Lima', amount: 150.00, date: '2026-04-28 10:00', status: 'pending', reason: 'Emergência Veterinária' },
+];
+
 export default function RH() {
-  const [activeTab, setActiveTab] = useState<'employees' | 'ponto'>('employees');
+  const [activeTab, setActiveTab] = useState<'employees' | 'ponto' | 'vales'>('employees');
+  const [employees, setEmployees] = useState<Employee[]>(EMPLOYEES);
+  const [vales, setVales] = useState<Voucher[]>(INITIAL_VALES);
+  const [showVoucherModal, setShowVoucherModal] = useState<Employee | null>(null);
+  
+  const [newVoucher, setNewVoucher] = useState({
+    amount: '',
+    reason: ''
+  });
+
+  const handleCreateVoucher = () => {
+    if (!showVoucherModal || !newVoucher.amount) return;
+
+    const voucher: Voucher = {
+      id: Math.random().toString(36).substr(2, 9),
+      employeeId: showVoucherModal.id,
+      employeeName: showVoucherModal.name,
+      amount: parseFloat(newVoucher.amount),
+      date: new Date().toLocaleString(),
+      status: 'pending',
+      reason: newVoucher.reason || 'Adiantamento Antecipado'
+    };
+
+    setVales(prev => [voucher, ...prev]);
+    setShowVoucherModal(null);
+    setNewVoucher({ amount: '', reason: '' });
+  };
+
+  const handleUpdateStatus = (id: string, status: 'approved' | 'rejected') => {
+    setVales(prev => prev.map(v => v.id === id ? { ...v, status } : v));
+  };
 
   return (
     <div className="space-y-12">
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6">
         <div className="flex bg-white/5 p-1 rounded-2xl sm:rounded-full border border-white/5 luxury-gradient flex-col sm:flex-row">
-          <button 
-            onClick={() => setActiveTab('employees')}
-            className={`px-8 py-3 rounded-xl sm:rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] italic transition-all duration-500 ${activeTab === 'employees' ? 'bg-[#c5a059] text-[#0a0e17] shadow-2xl shadow-[#c5a059]/20' : 'text-white/20 hover:text-white'}`}
-          >
-            Quadro Cooperativo
-          </button>
-          <button 
-            onClick={() => setActiveTab('ponto')}
-            className={`px-8 py-3 rounded-xl sm:rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] italic transition-all duration-500 ${activeTab === 'ponto' ? 'bg-[#c5a059] text-[#0a0e17] shadow-2xl shadow-[#c5a059]/20' : 'text-white/20 hover:text-white'}`}
-          >
-            Terminal Transacional
-          </button>
+          {[
+            { id: 'employees', label: 'Quadro Cooperativo' },
+            { id: 'ponto', label: 'Terminal Transacional' },
+            { id: 'vales', label: 'Gestão de Vales' },
+          ].map(tab => (
+            <button 
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`px-8 py-3 rounded-xl sm:rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] italic transition-all duration-500 ${activeTab === tab.id ? 'bg-[#c5a059] text-[#0a0e17] shadow-2xl shadow-[#c5a059]/20' : 'text-white/20 hover:text-white'}`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
         <button className="px-8 sm:px-10 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 shadow-2xl shadow-[#c5a059]/20 italic group hover:scale-[1.02] transition-all">
           <UserPlus className="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" />
@@ -46,7 +92,7 @@ export default function RH() {
 
       {activeTab === 'employees' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {EMPLOYEES.map((employee) => (
+          {employees.map((employee) => (
             <div key={employee.id} className="luxury-card p-8 border-white/5 luxury-gradient relative overflow-hidden group hover:border-[#c5a059]/30 transition-all duration-700">
                <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full translate-x-12 -translate-y-12 group-hover:scale-150 transition-transform duration-1000"></div>
                
@@ -77,6 +123,13 @@ export default function RH() {
                    <div>
                       <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.3em] mb-2 italic">Ações Rápidas</p>
                       <div className="flex gap-3">
+                         <button 
+                           onClick={() => setShowVoucherModal(employee)}
+                           className="w-8 h-8 rounded-xl bg-[#c5a059]/10 text-[#c5a059] flex items-center justify-center hover:bg-[#c5a059] hover:text-[#0a0e17] transition-all duration-500 border border-[#c5a059]/20"
+                           title="Criar Vale"
+                         >
+                            <DollarSign className="w-3.5 h-3.5" />
+                         </button>
                          <button className="w-8 h-8 rounded-xl bg-white/5 text-white/20 flex items-center justify-center hover:bg-[#c5a059] hover:text-[#0a0e17] transition-all duration-500 border border-white/5"><Calendar className="w-3.5 h-3.5" /></button>
                          <button className="w-8 h-8 rounded-xl bg-white/5 text-white/20 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all duration-500 border border-white/5"><Briefcase className="w-3.5 h-3.5" /></button>
                       </div>
@@ -85,6 +138,80 @@ export default function RH() {
               </div>
             </div>
           ))}
+        </div>
+      ) : activeTab === 'vales' ? (
+        <div className="luxury-card border-white/5 overflow-hidden flex flex-col luxury-gradient">
+           <div className="p-10 border-b border-white/5 flex items-center justify-between">
+              <div>
+                 <h3 className="text-sm font-black uppercase tracking-[0.4em] text-white italic mb-1">Registro Master de Vales</h3>
+                 <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.3em]">Fluxo de Adiantamentos Ativos</p>
+              </div>
+              <div className="flex gap-4">
+                 <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-center px-8">
+                    <p className="text-[9px] font-black text-white/20 uppercase tracking-[0.3em] mb-1 italic">Total Pendente</p>
+                    <p className="text-xl font-serif italic font-black gold-text tracking-tighter">
+                       R$ {vales.filter(v => v.status === 'pending').reduce((acc, v) => acc + v.amount, 0).toFixed(2)}
+                    </p>
+                 </div>
+              </div>
+           </div>
+           
+           <div className="overflow-x-auto no-scrollbar">
+              <table className="w-full text-left uppercase text-[10px] tracking-widest font-bold min-w-[800px]">
+                 <thead>
+                    <tr className="bg-black/20 border-b border-white/5">
+                       <th className="px-10 py-6 text-white/30 italic">Beneficiário</th>
+                       <th className="px-10 py-6 text-white/30 italic">Data / Hora</th>
+                       <th className="px-10 py-6 text-white/30 italic">Motivo</th>
+                       <th className="px-10 py-6 text-white/30 italic text-center">Status</th>
+                       <th className="px-10 py-6 text-white/30 italic text-right">Valor</th>
+                       <th className="px-10 py-6 text-white/30 italic text-center">Ações</th>
+                    </tr>
+                 </thead>
+                 <tbody className="divide-y divide-white/5 italic">
+                    {vales.map(v => (
+                       <tr key={v.id} className="hover:bg-white/5 transition-all duration-500 group">
+                          <td className="px-10 py-8">
+                             <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/20 border border-white/5 group-hover:bg-[#c5a059] group-hover:text-black transition-all">
+                                   {v.employeeName.charAt(0)}
+                                </div>
+                                <span className="text-white font-serif font-black text-sm">{v.employeeName}</span>
+                             </div>
+                          </td>
+                          <td className="px-10 py-8 text-white/20">{v.date}</td>
+                          <td className="px-10 py-8 text-white/40 truncate max-w-[200px]">{v.reason}</td>
+                          <td className="px-10 py-8 text-center">
+                             <span className={`px-4 py-1.5 rounded-full border text-[8px] font-black ${v.status === 'approved' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : v.status === 'pending' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/20'}`}>
+                                {v.status === 'approved' ? 'RATIFICADO' : v.status === 'pending' ? 'AGUARDANDO' : 'INVALIDADO'}
+                             </span>
+                          </td>
+                          <td className="px-10 py-8 text-right font-serif font-black text-lg gold-text tracking-tighter">R$ {v.amount.toFixed(2)}</td>
+                          <td className="px-10 py-8 text-center">
+                             <div className="flex justify-center gap-3">
+                                {v.status === 'pending' && (
+                                   <>
+                                      <button 
+                                        onClick={() => handleUpdateStatus(v.id, 'approved')}
+                                        className="p-3 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-xl hover:bg-emerald-500 hover:text-white transition-all"
+                                      ><CheckCircle className="w-4 h-4" /></button>
+                                      <button 
+                                        onClick={() => handleUpdateStatus(v.id, 'rejected')}
+                                        className="p-3 bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-xl hover:bg-rose-500 hover:text-white transition-all"
+                                      ><XCircle className="w-4 h-4" /></button>
+                                   </>
+                                )}
+                                <button 
+                                  onClick={() => setVales(prev => prev.filter(item => item.id !== v.id))}
+                                  className="p-3 bg-white/5 text-white/20 border border-white/5 rounded-xl hover:bg-rose-600 hover:text-white transition-all"
+                                ><Trash2 className="w-4 h-4" /></button>
+                             </div>
+                          </td>
+                       </tr>
+                    ))}
+                 </tbody>
+              </table>
+           </div>
         </div>
       ) : (
         <div className="luxury-card border-white/5 luxury-gradient flex flex-col p-16 items-center justify-center min-h-[500px] relative overflow-hidden">
@@ -114,6 +241,68 @@ export default function RH() {
            </div>
         </div>
       )}
+
+      {/* Modal Criar Vale */}
+      <AnimatePresence>
+        {showVoucherModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+               initial={{ opacity: 0 }} 
+               animate={{ opacity: 1 }} 
+               exit={{ opacity: 0 }}
+               onClick={() => setShowVoucherModal(null)}
+               className="absolute inset-0 bg-[#05080d]/80 backdrop-blur-md"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-md bg-[#0a0e17] rounded-[3rem] border border-white/10 overflow-hidden shadow-2xl luxury-gradient"
+            >
+              <div className="p-10 bg-[#c5a059]/10 text-white border-b border-white/5">
+                 <div className="flex justify-between items-start mb-8">
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center border bg-[#c5a059]/20 text-[#c5a059] border-[#c5a059]/30">
+                       <DollarSign className="w-7 h-7" />
+                    </div>
+                    <button onClick={() => setShowVoucherModal(null)} className="p-3 hover:bg-white/10 rounded-full transition-colors"><XCircle className="w-6 h-6 text-white/20" /></button>
+                 </div>
+                 <h3 className="text-3xl font-serif italic font-black uppercase tracking-tighter gold-text">Emissão de Vale Elite</h3>
+                 <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 mt-2 italic">Beneficiário: {showVoucherModal.name}</p>
+              </div>
+
+              <div className="p-10 space-y-8">
+                <div>
+                  <label className="text-[10px] font-black uppercase text-white/20 tracking-[0.4em] mb-4 block italic">Motivação / Protocolo</label>
+                  <input 
+                    type="text" 
+                    placeholder="EX: ADIANTAMENTO QUINZENAL" 
+                    className="w-full p-5 bg-white/5 rounded-2xl border border-white/5 font-black text-white focus:border-[#c5a059]/30 outline-none transition-all text-xs tracking-widest placeholder:text-white/10 uppercase italic" 
+                    value={newVoucher.reason}
+                    onChange={e => setNewVoucher({...newVoucher, reason: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black uppercase text-white/20 tracking-[0.4em] mb-4 block italic">Quantitativo Monetário (R$)</label>
+                  <input 
+                    type="number" 
+                    placeholder="0,00" 
+                    className="w-full p-5 bg-white/5 rounded-2xl border border-white/5 font-serif italic font-black gold-text focus:border-[#c5a059]/30 outline-none transition-all text-3xl tracking-tighter" 
+                    value={newVoucher.amount}
+                    onChange={e => setNewVoucher({...newVoucher, amount: e.target.value})}
+                  />
+                </div>
+
+                <button 
+                  onClick={handleCreateVoucher}
+                  className="w-full py-6 rounded-full font-black uppercase tracking-[0.4em] text-[10px] text-[#0a0e17] transition-all shadow-2xl italic bg-gradient-to-r from-[#f9d976] to-[#c5a059]"
+                >
+                  RATIFICAR BENEFÍCIO
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

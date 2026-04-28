@@ -23,37 +23,55 @@ const FINANCE_DATA: Transaction[] = [
 export default function Financeiro() {
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<'income' | 'expense' | 'close'>('income');
+  const [modalType, setModalType] = useState<'income' | 'expense' | 'close' | 'open_cash' | 'cash_in' | 'cash_out'>('income');
+  const [isCashOpen, setIsCashOpen] = useState(false);
 
   const filtered = FINANCE_DATA.filter(t => filter === 'all' || t.type === filter);
 
-  const openModal = (type: 'income' | 'expense' | 'close') => {
+  const openModal = (type: 'income' | 'expense' | 'close' | 'open_cash' | 'cash_in' | 'cash_out') => {
     setModalType(type);
     setIsModalOpen(true);
+  };
+
+  const handleCashAction = () => {
+    if (modalType === 'open_cash') setIsCashOpen(true);
+    if (modalType === 'close') setIsCashOpen(false);
+    setIsModalOpen(false);
   };
 
   return (
     <div className="space-y-12">
       {/* Quick Actions */}
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-        <button 
-          onClick={() => openModal('income')}
-          className="flex-1 py-6 sm:py-8 bg-emerald-600/10 border border-emerald-500/20 text-emerald-500 rounded-[2rem] sm:rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs flex items-center justify-center gap-4 hover:bg-emerald-600/20 transition-all duration-500 shadow-2xl shadow-emerald-900/10"
-        >
-          <TrendingUp className="w-5 h-5 shrink-0" /> Entrada de Capital
-        </button>
-        <button 
-          onClick={() => openModal('expense')}
-          className="flex-1 py-6 sm:py-8 bg-rose-600/10 border border-rose-500/20 text-rose-500 rounded-[2rem] sm:rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs flex items-center justify-center gap-4 hover:bg-rose-600/20 transition-all duration-500 shadow-2xl shadow-rose-900/10"
-        >
-          <TrendingDown className="w-5 h-5 shrink-0" /> Saída de Ativos
-        </button>
-        <button 
-          onClick={() => openModal('close')}
-          className="flex-1 py-6 sm:py-8 bg-white/5 border border-white/10 text-white rounded-[2rem] sm:rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs flex items-center justify-center gap-4 hover:bg-white/10 transition-all duration-500 shadow-2xl shadow-black"
-        >
-          <CheckCircle2 className="w-5 h-5 shrink-0" /> Fechar Protocolo
-        </button>
+        {!isCashOpen ? (
+          <button 
+            onClick={() => openModal('open_cash')}
+            className="flex-1 py-6 sm:py-8 bg-[#c5a059]/10 border border-[#c5a059]/20 text-[#c5a059] rounded-[2rem] sm:rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs flex items-center justify-center gap-4 hover:bg-[#c5a059]/20 transition-all duration-500 shadow-2xl shadow-[#c5a059]/10"
+          >
+            <Landmark className="w-5 h-5 shrink-0" /> Abertura de Caixa
+          </button>
+        ) : (
+          <>
+            <button 
+              onClick={() => openModal('cash_in')}
+              className="flex-1 py-6 sm:py-8 bg-emerald-600/10 border border-emerald-500/20 text-emerald-500 rounded-[2rem] sm:rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs flex items-center justify-center gap-4 hover:bg-emerald-600/20 transition-all duration-500 shadow-2xl shadow-emerald-900/10"
+            >
+              <ArrowDownRight className="w-5 h-5 shrink-0 rotate-180" /> Entrada (Suprimento)
+            </button>
+            <button 
+              onClick={() => openModal('cash_out')}
+              className="flex-1 py-6 sm:py-8 bg-rose-600/10 border border-rose-500/20 text-rose-500 rounded-[2rem] sm:rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs flex items-center justify-center gap-4 hover:bg-rose-600/20 transition-all duration-500 shadow-2xl shadow-rose-900/10"
+            >
+              <ArrowUpRight className="w-5 h-5 shrink-0" /> Saída (Sangria)
+            </button>
+            <button 
+              onClick={() => openModal('close')}
+              className="flex-1 py-6 sm:py-8 bg-white/5 border border-white/10 text-white rounded-[2rem] sm:rounded-[2.5rem] font-serif italic font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs flex items-center justify-center gap-4 hover:bg-white/10 transition-all duration-500 shadow-2xl shadow-black"
+            >
+              <CheckCircle2 className="w-5 h-5 shrink-0" /> Fechamento Protocolar
+            </button>
+          </>
+        )}
       </div>
 
       {/* Financial Overview */}
@@ -194,39 +212,53 @@ export default function Financeiro() {
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               className="relative w-full max-w-md bg-[#0a0e17] rounded-[3rem] border border-white/10 overflow-hidden shadow-2xl luxury-gradient"
             >
-              <div className={`p-10 ${modalType === 'income' ? 'bg-emerald-600/20' : modalType === 'expense' ? 'bg-rose-600/20' : 'bg-white/5'} text-white border-b border-white/5`}>
+              <div className={`p-10 ${modalType === 'income' || modalType === 'cash_in' ? 'bg-emerald-600/20' : modalType === 'expense' || modalType === 'cash_out' ? 'bg-rose-600/20' : 'bg-[#c5a059]/10'} text-white border-b border-white/5`}>
                  <div className="flex justify-between items-start mb-8">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${modalType === 'income' ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30' : modalType === 'expense' ? 'bg-rose-500/20 text-rose-500 border-rose-500/30' : 'bg-[#c5a059]/20 text-[#c5a059] border-[#c5a059]/30'}`}>
-                       {modalType === 'income' ? <TrendingUp className="w-7 h-7" /> : modalType === 'expense' ? <TrendingDown className="w-7 h-7" /> : <CheckCircle2 className="w-7 h-7" />}
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${modalType === 'income' || modalType === 'cash_in' ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30' : modalType === 'expense' || modalType === 'cash_out' ? 'bg-rose-500/20 text-rose-500 border-rose-500/30' : 'bg-[#c5a059]/20 text-[#c5a059] border-[#c5a059]/30'}`}>
+                       {modalType === 'income' || modalType === 'cash_in' ? <TrendingUp className="w-7 h-7" /> : modalType === 'expense' || modalType === 'cash_out' ? <TrendingDown className="w-7 h-7" /> : <Landmark className="w-7 h-7" />}
                     </div>
                     <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-white/10 rounded-full transition-colors"><X className="w-6 h-6" /></button>
                  </div>
                  <h3 className="text-3xl font-serif italic font-black uppercase tracking-tighter gold-text">
-                   {modalType === 'income' ? 'Aporte de Capital' : modalType === 'expense' ? 'Débito Operacional' : 'Fechamento de Ciclo'}
+                   {modalType === 'income' ? 'Aporte de Capital' : 
+                    modalType === 'expense' ? 'Débito Operacional' : 
+                    modalType === 'open_cash' ? 'Abertura de Caixa' :
+                    modalType === 'cash_in' ? 'Suprimento de Caixa' :
+                    modalType === 'cash_out' ? 'Sangria de Caixa' :
+                    'Fechamento de Ciclo'}
                  </h3>
-                 <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 mt-2 italic">Registro em Livro de Razão Semente</p>
+                 <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 mt-2 italic">Protocolo de Segurança Financeira</p>
               </div>
 
               <div className="p-10 space-y-8">
                 {modalType !== 'close' ? (
                   <>
                     <div>
-                      <label className="text-[10px] font-black uppercase text-white/20 tracking-[0.4em] mb-4 block italic">Designação da Transação</label>
-                      <input type="text" placeholder="EX: AQUISIÇÃO DE INSUMOS" className="w-full p-5 bg-white/5 rounded-2xl border border-white/5 font-black text-white focus:border-[#c5a059]/30 outline-none transition-all text-xs tracking-widest placeholder:text-white/10 uppercase italic" />
+                      <label className="text-[10px] font-black uppercase text-white/20 tracking-[0.4em] mb-4 block italic">
+                        {modalType === 'open_cash' ? 'Fundo de Reserva Inicial' : 'Designação da Transação'}
+                      </label>
+                      <input 
+                        type={modalType === 'open_cash' ? 'hidden' : 'text'} 
+                        placeholder="EX: AQUISIÇÃO DE INSUMOS" 
+                        className={`${modalType === 'open_cash' ? 'hidden' : 'block'} w-full p-5 bg-white/5 rounded-2xl border border-white/5 font-black text-white focus:border-[#c5a059]/30 outline-none transition-all text-xs tracking-widest placeholder:text-white/10 uppercase italic`} 
+                      />
+                      {modalType === 'open_cash' && <p className="text-white/40 text-xs italic">Inicie o terminal com o lastro necessário para as operações do dia.</p>}
                     </div>
                     <div>
                       <label className="text-[10px] font-black uppercase text-white/20 tracking-[0.4em] mb-4 block italic">Quantitativo Monetário (R$)</label>
                       <input type="number" placeholder="0,00" className="w-full p-5 bg-white/5 rounded-2xl border border-white/5 font-serif italic font-black gold-text focus:border-[#c5a059]/30 outline-none transition-all text-3xl tracking-tighter" />
                     </div>
-                    <div>
-                      <label className="text-[10px] font-black uppercase text-white/20 tracking-[0.4em] mb-4 block italic">Classificação de Ativo</label>
-                      <select className="w-full p-5 bg-white/5 rounded-2xl border border-white/5 font-black text-white/60 focus:border-[#c5a059]/30 outline-none transition-all text-xs tracking-widest uppercase italic appearance-none cursor-pointer">
-                         <option className="bg-[#0a0e17]">Operacional / Vendas</option>
-                         <option className="bg-[#0a0e17]">Patrimonial / Investimento</option>
-                         <option className="bg-[#0a0e17]">Logística / Suprimentos</option>
-                         <option className="bg-[#0a0e17]">Capital Humano</option>
-                      </select>
-                    </div>
+                    {modalType !== 'open_cash' && modalType !== 'cash_in' && modalType !== 'cash_out' && (
+                      <div>
+                        <label className="text-[10px] font-black uppercase text-white/20 tracking-[0.4em] mb-4 block italic">Classificação de Ativo</label>
+                        <select className="w-full p-5 bg-white/5 rounded-2xl border border-white/5 font-black text-white/60 focus:border-[#c5a059]/30 outline-none transition-all text-xs tracking-widest uppercase italic appearance-none cursor-pointer">
+                           <option className="bg-[#0a0e17]">Operacional / Vendas</option>
+                           <option className="bg-[#0a0e17]">Patrimonial / Investimento</option>
+                           <option className="bg-[#0a0e17]">Logística / Suprimentos</option>
+                           <option className="bg-[#0a0e17]">Capital Humano</option>
+                        </select>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <div className="text-center py-6">
@@ -253,10 +285,10 @@ export default function Financeiro() {
                 )}
 
                 <button 
-                  onClick={() => setIsModalOpen(false)}
-                  className={`w-full py-6 rounded-full font-black uppercase tracking-[0.4em] text-[10px] text-[#0a0e17] transition-all shadow-2xl italic ${modalType === 'income' ? 'bg-gradient-to-r from-emerald-400 to-emerald-600' : modalType === 'expense' ? 'bg-gradient-to-r from-rose-400 to-rose-600' : 'bg-gradient-to-r from-[#f9d976] to-[#c5a059]'}`}
+                  onClick={handleCashAction}
+                  className={`w-full py-6 rounded-full font-black uppercase tracking-[0.4em] text-[10px] text-[#0a0e17] transition-all shadow-2xl italic ${modalType === 'income' || modalType === 'cash_in' ? 'bg-gradient-to-r from-emerald-400 to-emerald-600' : modalType === 'expense' || modalType === 'cash_out' ? 'bg-gradient-to-r from-rose-400 to-rose-600' : 'bg-gradient-to-r from-[#f9d976] to-[#c5a059]'}`}
                 >
-                  RATIFICAR OPERAÇÃO
+                  {modalType === 'open_cash' ? 'EFETIVAR ABERTURA' : 'RATIFICAR OPERAÇÃO'}
                 </button>
               </div>
             </motion.div>

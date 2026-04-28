@@ -832,7 +832,12 @@ export default function App() {
                      </div>
                    ))}
                 </div>
-                <button className="w-full mt-10 py-5 border border-dashed border-white/10 rounded-3xl text-[10px] font-black uppercase text-white/20 tracking-[0.3em] hover:text-[#c5a059] hover:border-[#c5a059]/30 transition-all italic">REPOUSIÇÃO IMEDIATA</button>
+                <button 
+                  onClick={() => setCurrentSection('stock')}
+                  className="w-full mt-10 py-5 border border-dashed border-white/10 rounded-3xl text-[10px] font-black uppercase text-white/20 tracking-[0.3em] hover:text-[#c5a059] hover:border-[#c5a059]/30 transition-all italic"
+               >
+                  REPOSIÇÃO IMEDIATA
+               </button>
              </div>
           </div>
        </div>
@@ -929,6 +934,7 @@ export default function App() {
               <p className="text-[10px] font-bold uppercase text-white/20 tracking-[0.4em] mb-6 ml-2 italic">Inteligência Luxo</p>
               <nav className="space-y-3">
                 {[
+                  { id: 'stock', icon: <Package className="w-5 h-5" />, label: 'Estoque / Ativos' },
                   { id: 'config', icon: <Settings className="w-5 h-5" />, label: 'Arquitetura' },
                   { id: 'solutions', icon: <QrCode className="w-5 h-5" />, label: 'PIX / Elite' },
                   { id: 'reports', icon: <LineChart className="w-5 h-5" />, label: 'Relatórios' },
