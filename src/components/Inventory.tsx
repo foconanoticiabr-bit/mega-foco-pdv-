@@ -176,17 +176,17 @@ export default function Inventory() {
        </div>
 
        <div className="luxury-card border-white/5 overflow-hidden flex flex-col flex-1 luxury-gradient">
-          <div className="overflow-x-auto">
-             <table className="w-full text-left uppercase text-[9px] tracking-[0.2em] font-black">
+          <div className="overflow-x-auto no-scrollbar">
+             <table className="w-full text-left uppercase text-[9px] tracking-[0.2em] font-black min-w-[1000px]">
                 <thead>
                    <tr className="bg-black/20 border-b border-white/5">
-                      <th className="px-10 py-6 text-white/30 italic">Designação do Ativo</th>
-                      <th className="px-10 py-6 text-white/30 italic">Cód. Barras</th>
-                      <th className="px-10 py-6 text-white/30 italic">Segmento</th>
-                      <th className="px-10 py-6 text-white/30 italic text-center">Status</th>
-                      <th className="px-10 py-6 text-white/30 italic text-center">Disponibilidade</th>
-                      <th className="px-10 py-6 text-white/30 italic text-right">Valor Unitário</th>
-                      <th className="px-10 py-6 text-white/30 italic text-center">Ações</th>
+                      <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 italic">Designação do Ativo</th>
+                      <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 italic">Cód. Barras</th>
+                      <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 italic">Segmento</th>
+                      <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 italic text-center">Status</th>
+                      <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 italic text-center">Estoque</th>
+                      <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 italic text-right">Valor Unitário</th>
+                      <th className="px-6 sm:px-10 py-5 sm:py-6 text-white/30 italic text-center">Ações</th>
                    </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5 font-bold italic">

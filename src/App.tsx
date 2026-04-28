@@ -45,7 +45,10 @@ import {
   Facebook,
   MessageCircle,
   Phone,
-  Send
+  Send,
+  Activity,
+  FileCheck,
+  Cloud
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import PDV from './components/PDV';
@@ -91,6 +94,7 @@ export default function App() {
   const [isGeneratingPayment, setIsGeneratingPayment] = useState(false);
   const [copied, setCopied] = useState(false);
   const [mpPixData, setMpPixData] = useState<{ qr_code: string, qr_code_base64: string } | null>(null);
+  const [isSefazEnabled, setIsSefazEnabled] = useState(false);
 
   const pixKeys = {
     primary: "62995108558",
@@ -339,7 +343,7 @@ export default function App() {
             <ShieldCheck className="w-4 h-4 shrink-0" />
             A Excelência em Gestão para Negócios de Elite
           </div>
-          <h1 className="text-4xl xs:text-5xl md:text-[10rem] font-serif font-black tracking-tighter mb-8 md:mb-10 leading-[0.9] md:leading-[0.85] text-white uppercase italic">
+          <h1 className="text-4xl sm:text-5xl lg:text-[10rem] font-serif font-black tracking-tighter mb-8 md:mb-10 leading-[0.9] md:leading-[0.85] text-white uppercase italic">
             DOMINE O SEU <br/>
             <span className="gold-text">DESTINO</span>
           </h1>
@@ -384,7 +388,7 @@ export default function App() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5a059] text-[#0a0e17] text-[10px] font-black uppercase tracking-widest mb-10 italic">
                 NOVO — CRM ELITE
               </div>
-              <h2 className="text-4xl sm:text-5xl md:text-8xl font-serif font-black tracking-tighter text-white uppercase leading-[0.85] mb-10 italic">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-8xl font-serif font-black tracking-tighter text-white uppercase leading-[0.85] mb-10 italic">
                 Fidelização em <br/>
                 <span className="gold-text">Estado Criativo</span>
               </h2>
@@ -469,7 +473,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto">
              <div className="text-center mb-32">
                 <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-[#c5a059] mb-6 inline-block italic border-b border-[#c5a059] pb-2">Ecossistema</h3>
-                <h2 className="text-5xl md:text-8xl font-serif font-black tracking-tighter text-white uppercase leading-none italic">Alianças de <br/><span className="gold-text">Valor</span></h2>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-8xl font-serif font-black tracking-tighter text-white uppercase leading-none italic">Alianças de <br/><span className="gold-text">Valor</span></h2>
              </div>
              
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -503,7 +507,7 @@ export default function App() {
           <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8">
             <div className="max-w-xl">
                <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-[#c5a059] mb-6 inline-block italic border-b border-[#c5a059] pb-2">Exclusividade</h3>
-               <h2 className="text-5xl md:text-7xl font-serif font-black tracking-tighter text-white uppercase leading-none">O Ecossistema <br/><span className="gold-text">Perfeito</span></h2>
+               <h2 className="text-3xl sm:text-4xl md:text-7xl font-serif font-black tracking-tighter text-white uppercase leading-none">O Ecossistema <br/><span className="gold-text">Perfeito</span></h2>
             </div>
             <p className="text-white/40 text-lg font-light max-w-sm md:text-right tracking-wide italic">Arquitetura de ponta para empresários que não aceitam menos que o topo.</p>
           </div>
@@ -534,7 +538,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto relative z-10">
              <div className="text-center mb-32">
                 <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-[#c5a059] mb-6 inline-block italic border-b border-[#c5a059] pb-2">Assinaturas</h3>
-                <h2 className="text-4xl xs:text-5xl md:text-8xl font-serif font-black tracking-tighter text-white uppercase leading-none mb-16 italic">Escolha sua <br/> <span className="gold-text">Liderança</span></h2>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-8xl font-serif font-black tracking-tighter text-white uppercase leading-none mb-16 italic">Escolha sua <br/> <span className="gold-text">Liderança</span></h2>
                 
                 {/* Plan Categories Tabs */}
                 <div className="flex flex-wrap justify-center gap-4 mb-20">
@@ -969,26 +973,28 @@ export default function App() {
             </div>
 
             {/* SEFAZ */}
-            <div>
-              <p className="text-[10px] font-bold uppercase text-white/20 tracking-[0.4em] mb-6 ml-2 italic">Fiscal</p>
-              <nav className="space-y-3">
-                {[
-                  { id: 'nfe', icon: <FileText className="w-5 h-5" />, label: 'SEFAZ / NF-e' },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setCurrentSection(item.id as Section);
-                      setIsSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-4 px-6 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${currentSection === item.id ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059] shadow-xl shadow-[#c5a059]/10' : 'text-white/40 border-transparent hover:bg-white/5 hover:text-white'}`}
-                  >
-                    {item.icon}
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
-            </div>
+            {isSefazEnabled && (
+              <div>
+                <p className="text-[10px] font-bold uppercase text-white/20 tracking-[0.4em] mb-6 ml-2 italic">Fiscal</p>
+                <nav className="space-y-3">
+                  {[
+                    { id: 'nfe', icon: <FileText className="w-5 h-5" />, label: 'SEFAZ / NF-e' },
+                  ].map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setCurrentSection(item.id as Section);
+                        setIsSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-4 px-6 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-500 border ${currentSection === item.id ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059] shadow-xl shadow-[#c5a059]/10' : 'text-white/40 border-transparent hover:bg-white/5 hover:text-white'}`}
+                    >
+                      {item.icon}
+                      {item.label}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+            )}
 
             {/* Administrador */}
             <div>
@@ -1079,7 +1085,7 @@ export default function App() {
         {/* Main Content Area */}
         <main className="flex-1 flex flex-col min-w-0">
            {/* Navigation Bar */}
-           <header className="h-24 bg-[#0a0e17] border-b border-white/5 px-6 sm:px-12 flex items-center justify-between shrink-0 relative z-50">
+           <header className="h-20 sm:h-24 bg-[#0a0e17] border-b border-white/5 px-4 sm:px-12 flex items-center justify-between shrink-0 relative z-50">
               <div className="flex items-center gap-4 sm:gap-5">
                  <button 
                    onClick={() => setIsSidebarOpen(true)}
@@ -1108,7 +1114,7 @@ export default function App() {
            </header>
 
            {/* Content Scrollable */}
-           <div className="flex-1 overflow-y-auto p-6 sm:p-12 bg-[#05080d] custom-scrollbar">
+           <div className="flex-1 overflow-y-auto p-4 sm:p-12 bg-[#05080d] custom-scrollbar">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentSection}
@@ -1192,14 +1198,37 @@ export default function App() {
                              <input type="text" placeholder="Designação Fantasia" className="w-full p-6 bg-white/5 border border-white/5 rounded-3xl font-bold text-white placeholder:text-white/10 focus:ring-2 focus:ring-[#c5a059]/20 outline-none transition-all uppercase tracking-widest text-xs mb-4" />
                              <input type="text" placeholder="Protocolo Fiscal (CNPJ)" className="w-full p-6 bg-white/5 border border-white/5 rounded-3xl font-bold text-white placeholder:text-white/10 focus:ring-2 focus:ring-[#c5a059]/20 outline-none transition-all uppercase tracking-widest text-xs" />
                           </div>
-                        <div className="p-10 bg-white/5 rounded-[2.5rem] border border-white/5">
+                        <div className="p-8 sm:p-10 bg-white/5 rounded-[2.5rem] border border-white/5">
                              <p className="text-[10px] font-black uppercase text-white/20 tracking-[0.4em] mb-6 italic">Protocolos de Impressão</p>
-                             <label className="flex items-center gap-4 cursor-pointer group">
-                                <div className="w-6 h-6 rounded-lg border-2 border-white/10 group-hover:border-[#c5a059]/50 transition-all flex items-center justify-center">
-                                   <div className="w-3 h-3 bg-[#c5a059] rounded-sm opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                </div>
-                                <span className="text-[11px] font-black text-white/40 uppercase tracking-widest italic group-hover:text-white transition-colors">Emissão de Comprovante Digital Automático</span>
-                             </label>
+                             <div className="space-y-6">
+                               <label className="flex items-center gap-4 cursor-pointer group">
+                                  <div className="w-6 h-6 rounded-lg border-2 border-white/10 group-hover:border-[#c5a059]/50 transition-all flex items-center justify-center">
+                                     <div className="w-3 h-3 bg-[#c5a059] rounded-sm opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                  </div>
+                                  <span className="text-[10px] sm:text-[11px] font-black text-white/40 uppercase tracking-widest italic group-hover:text-white transition-colors">Emissão de Comprovante Automático</span>
+                               </label>
+                               
+                               <div className="pt-6 border-t border-white/5">
+                                 <p className="text-[10px] font-black uppercase text-[#c5a059] tracking-[0.4em] mb-6 italic">Integrações Adicionais</p>
+                                 <label 
+                                   className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/10 transition-all group"
+                                   onClick={() => setIsSefazEnabled(!isSefazEnabled)}
+                                 >
+                                    <div className="flex items-center gap-4">
+                                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all ${isSefazEnabled ? 'bg-[#c5a059] text-[#0a0e17] border-[#c5a059]' : 'bg-white/5 text-white/20 border-white/10'}`}>
+                                          <FileText className="w-5 h-5" />
+                                       </div>
+                                       <div>
+                                          <p className="text-[10px] font-black uppercase tracking-widest text-white leading-none mb-1">Módulo SEFAZ / NF-e</p>
+                                          <p className="text-[8px] font-bold text-white/30 uppercase italic tracking-widest">Habilitar emissão fiscal</p>
+                                       </div>
+                                    </div>
+                                    <div className={`w-12 h-6 rounded-full relative transition-all duration-500 ${isSefazEnabled ? 'bg-[#c5a059]' : 'bg-white/10'}`}>
+                                       <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all duration-500 ${isSefazEnabled ? 'left-7' : 'left-1'}`}></div>
+                                    </div>
+                                 </label>
+                               </div>
+                             </div>
                           </div>
                       </div>
                    </div>
