@@ -22,6 +22,14 @@ interface Movement {
   reason: string;
 }
 
+interface Supplier {
+  id: string;
+  name: string;
+  cnpj: string;
+  contact: string;
+  category: string;
+}
+
 const STOCK_DATA: Product[] = [
   { id: '1', name: 'Shampoo Pro Liso', category: 'Beleza', stock: 15, minStock: 5, price: 120.00, barcode: '7891234567890', supplier: 'Loreal Expert' },
   { id: '2', name: 'Condicionador Pro', category: 'Beleza', stock: 12, minStock: 5, price: 95.00, barcode: '7890123456789', supplier: 'Loreal Expert' },
@@ -33,12 +41,19 @@ const INITIAL_MOVEMENTS: Movement[] = [
   { id: 'm2', productId: '2', productName: 'Condicionador Pro', type: 'OUT', quantity: 2, date: '2024-04-26 10:15', reason: 'Uso em Bancada' },
 ];
 
+const INITIAL_SUPPLIERS: Supplier[] = [
+  { id: 's1', name: 'Loreal Expert', cnpj: '12.345.678/0001-90', contact: '(11) 98888-7777', category: 'Beleza' },
+  { id: 's2', name: 'Wella Professional', cnpj: '98.765.432/0001-10', contact: '(21) 97777-6666', category: 'Beleza' },
+];
+
 export default function Inventory() {
   const [searchTerm, setSearchTerm] = useState('');
   const [products, setProducts] = useState<Product[]>(STOCK_DATA);
   const [movements, setMovements] = useState<Movement[]>(INITIAL_MOVEMENTS);
-  const [activeTab, setActiveTab] = useState<'inventory' | 'movements'>('inventory');
+  const [suppliers, setSuppliers] = useState<Supplier[]>(INITIAL_SUPPLIERS);
+  const [activeTab, setActiveTab] = useState<'inventory' | 'movements' | 'suppliers'>('inventory');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showMovementModal, setShowMovementModal] = useState<{ type: 'IN' | 'OUT', product: Product } | null>(null);
   
@@ -50,6 +65,13 @@ export default function Inventory() {
     price: 0,
     barcode: '',
     supplier: ''
+  });
+
+  const [newSupplier, setNewSupplier] = useState<Partial<Supplier>>({
+    name: '',
+    cnpj: '',
+    contact: '',
+    category: ''
   });
 
   const [movementQty, setMovementQty] = useState(0);
@@ -120,6 +142,20 @@ export default function Inventory() {
     setShowMovementModal(null);
     setMovementQty(0);
     setMovementReason('');
+  };
+
+  const handleAddSupplier = () => {
+    if (!newSupplier.name) return;
+    const supplierToAdd: Supplier = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: newSupplier.name,
+      cnpj: newSupplier.cnpj || '',
+      contact: newSupplier.contact || '',
+      category: newSupplier.category || ''
+    };
+    setSuppliers(prev => [supplierToAdd, ...prev]);
+    setShowSupplierModal(false);
+    setNewSupplier({ name: '', cnpj: '', contact: '', category: '' });
   };
 
   const filtered = products.filter(p => 
@@ -280,19 +316,91 @@ export default function Inventory() {
          </div>
        )}
 
+       {/* Modal Fornecedor */}
+       {showSupplierModal && (
+         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
+            <div className="w-full max-w-xl bg-[#0a0e17] border border-white/10 sm:rounded-[3rem] rounded-[2rem] p-8 sm:p-12 luxury-gradient shadow-2xl">
+               <h3 className="text-xl sm:text-2xl font-serif font-black gold-text italic mb-8 uppercase tracking-tighter text-center">Cadastrar Fornecedor Elite</h3>
+               
+               <div className="space-y-5">
+                  <div className="space-y-2">
+                     <label className="text-[10px] font-black uppercase text-white/30 tracking-[0.4em] ml-4 italic">Razão Social / Nome</label>
+                     <input 
+                       type="text" 
+                       className="w-full bg-white/5 border border-white/5 p-4 rounded-2xl text-white outline-none focus:border-[#c5a059]/30 text-xs uppercase"
+                       value={newSupplier.name}
+                       onChange={e => setNewSupplier({...newSupplier, name: e.target.value})}
+                     />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase text-white/30 tracking-[0.4em] ml-4 italic">CNPJ</label>
+                       <input 
+                         type="text" 
+                         className="w-full bg-white/5 border border-white/5 p-4 rounded-2xl text-white outline-none focus:border-[#c5a059]/30 text-xs font-mono"
+                         placeholder="00.000.000/0001-00"
+                         value={newSupplier.cnpj}
+                         onChange={e => setNewSupplier({...newSupplier, cnpj: e.target.value})}
+                       />
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase text-white/30 tracking-[0.4em] ml-4 italic">Segmento</label>
+                       <input 
+                         type="text" 
+                         className="w-full bg-white/5 border border-white/5 p-4 rounded-2xl text-white outline-none focus:border-[#c5a059]/30 text-xs uppercase"
+                         value={newSupplier.category}
+                         onChange={e => setNewSupplier({...newSupplier, category: e.target.value})}
+                       />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                     <label className="text-[10px] font-black uppercase text-white/30 tracking-[0.4em] ml-4 italic">Contato / WhatsApp</label>
+                     <input 
+                       type="text" 
+                       className="w-full bg-white/5 border border-white/5 p-4 rounded-2xl text-white outline-none focus:border-[#c5a059]/30 text-xs"
+                       value={newSupplier.contact}
+                       onChange={e => setNewSupplier({...newSupplier, contact: e.target.value})}
+                     />
+                  </div>
+               </div>
+
+               <div className="flex gap-4 mt-10">
+                  <button 
+                    onClick={() => setShowSupplierModal(false)}
+                    className="flex-1 py-5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-white/40 hover:bg-white/5 transition-all"
+                  >
+                    Abortar
+                  </button>
+                  <button 
+                    onClick={handleAddSupplier}
+                    className="flex-1 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-xl shadow-[#c5a059]/20 hover:scale-[1.02] transition-all italic"
+                  >
+                    Ativar Parceria
+                  </button>
+               </div>
+            </div>
+         </div>
+       )}
+
        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 shrink-0">
-          <div className="flex items-center gap-2 p-1 bg-white/5 rounded-full border border-white/5">
+          <div className="flex items-center gap-2 p-1 bg-white/5 rounded-full border border-white/5 overflow-x-auto no-scrollbar">
              <button 
                onClick={() => setActiveTab('inventory')}
-               className={`px-8 py-3 rounded-full text-[9px] font-black uppercase tracking-[0.3em] transition-all duration-500 ${activeTab === 'inventory' ? 'bg-[#c5a059] text-[#0a0e17] shadow-lg shadow-[#c5a059]/20' : 'text-white/40 hover:text-white'}`}
+               className={`px-8 py-3 rounded-full text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 whitespace-nowrap ${activeTab === 'inventory' ? 'bg-[#c5a059] text-[#0a0e17] shadow-lg shadow-[#c5a059]/20' : 'text-white/40 hover:text-white'}`}
              >
                Patrimônio
              </button>
              <button 
                onClick={() => setActiveTab('movements')}
-               className={`px-8 py-3 rounded-full text-[9px] font-black uppercase tracking-[0.3em] transition-all duration-500 ${activeTab === 'movements' ? 'bg-[#c5a059] text-[#0a0e17] shadow-lg shadow-[#c5a059]/20' : 'text-white/40 hover:text-white'}`}
+               className={`px-8 py-3 rounded-full text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 whitespace-nowrap ${activeTab === 'movements' ? 'bg-[#c5a059] text-[#0a0e17] shadow-lg shadow-[#c5a059]/20' : 'text-white/40 hover:text-white'}`}
              >
                Movimentação
+             </button>
+             <button 
+               onClick={() => setActiveTab('suppliers')}
+               className={`px-8 py-3 rounded-full text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 whitespace-nowrap ${activeTab === 'suppliers' ? 'bg-[#c5a059] text-[#0a0e17] shadow-lg shadow-[#c5a059]/20' : 'text-white/40 hover:text-white'}`}
+             >
+               Fornecedores
              </button>
           </div>
 
@@ -301,18 +409,26 @@ export default function Inventory() {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#c5a059] w-4 h-4 transition-colors" />
                 <input 
                    type="text" 
-                   placeholder="PESQUISAR..." 
+                   placeholder={activeTab === 'suppliers' ? "BUSCAR PARCEIRO..." : "BUSCAR ATIVO..."}
                    className="w-full pl-12 pr-6 py-4 bg-white/5 border border-white/5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] italic text-white focus:border-[#c5a059]/30 outline-none transition-all placeholder:text-white/10"
                    value={searchTerm}
                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
              </div>
              <button 
-               onClick={() => { setEditingProduct(null); setNewProduct({ name: '', category: '', stock: 0, minStock: 0, price: 0, barcode: '', supplier: '' }); setShowAddModal(true); }}
-               className="px-8 py-4 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[9px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:scale-[1.05] transition-all shadow-2xl shadow-[#c5a059]/20 italic"
+               onClick={() => { 
+                 if (activeTab === 'suppliers') {
+                   setShowSupplierModal(true);
+                 } else {
+                   setEditingProduct(null); 
+                   setNewProduct({ name: '', category: '', stock: 0, minStock: 0, price: 0, barcode: '', supplier: '' }); 
+                   setShowAddModal(true);
+                 }
+               }}
+               className="px-8 py-4 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[9px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:scale-[1.05] transition-all shadow-2xl shadow-[#c5a059]/20 italic"
              >
                 <Plus className="w-5 h-5" />
-                Novo Ativo
+                {activeTab === 'suppliers' ? 'Novo Parceiro' : 'Novo Ativo'}
              </button>
           </div>
        </div>
@@ -424,7 +540,7 @@ export default function Inventory() {
                       })}
                    </tbody>
                 </table>
-             ) : (
+             ) : activeTab === 'movements' ? (
                 <table className="w-full text-left uppercase text-[9px] tracking-[0.2em] font-black min-w-[800px]">
                    <thead>
                       <tr className="bg-black/20 border-b border-white/5">
@@ -456,6 +572,39 @@ export default function Inventory() {
                            <td colSpan={5} className="px-10 py-20 text-center text-white/10 uppercase tracking-[0.5em] italic">Nenhuma movimentação registrada</td>
                         </tr>
                       )}
+                   </tbody>
+                </table>
+             ) : (
+                <table className="w-full text-left uppercase text-[9px] tracking-[0.2em] font-black min-w-[800px]">
+                   <thead>
+                      <tr className="bg-black/20 border-b border-white/5">
+                         <th className="px-10 py-6 text-white/30 italic">Parceiro Estratégico</th>
+                         <th className="px-10 py-6 text-white/30 italic">CNPJ / Identidade</th>
+                         <th className="px-10 py-6 text-white/30 italic">Segmento</th>
+                         <th className="px-10 py-6 text-white/30 italic text-right">Contato</th>
+                         <th className="px-10 py-6 text-white/30 italic text-center">Ações</th>
+                      </tr>
+                   </thead>
+                   <tbody className="divide-y divide-white/5 font-bold italic">
+                      {suppliers.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase())).map(s => (
+                        <tr key={s.id} className="hover:bg-white/5 transition-all duration-500">
+                           <td className="px-10 py-8 text-white font-serif font-black">{s.name}</td>
+                           <td className="px-10 py-8 text-white/40 font-mono italic">{s.cnpj}</td>
+                           <td className="px-10 py-8">
+                             <span className="text-[8px] font-black text-[#c5a059] border border-[#c5a059]/20 px-3 py-1 rounded-full">{s.category}</span>
+                           </td>
+                           <td className="px-10 py-8 text-right text-white/60">{s.contact}</td>
+                           <td className="px-10 py-8 text-center">
+                              <div className="flex justify-center gap-3">
+                                 <button className="p-3 bg-white/5 hover:text-[#c5a059] border border-white/5 hover:border-[#c5a059]/20 rounded-xl transition-all"><Edit3 className="w-4 h-4" /></button>
+                                 <button 
+                                   onClick={() => setSuppliers(prev => prev.filter(item => item.id !== s.id))}
+                                   className="p-3 bg-white/5 hover:text-rose-500 border border-white/5 hover:border-rose-500/20 rounded-xl transition-all"
+                                 ><Trash2 className="w-4 h-4" /></button>
+                              </div>
+                           </td>
+                        </tr>
+                      ))}
                    </tbody>
                 </table>
              )}

@@ -213,11 +213,11 @@ export default function App() {
     { icon: <ShoppingBag className="w-6 h-6" />, title: "PDV / Frente de Caixa", desc: "Venda rápida com carrinho, desconto e múltiplas formas de pagamento." },
     { icon: <ClipboardList className="w-6 h-6" />, title: "Comandas", desc: "Abra e gerencie comandas por cliente com controle total dos itens." },
     { icon: <Calendar className="w-6 h-6" />, title: "Agendamentos", desc: "Agenda online para serviços com status e notificações." },
-    { icon: <Users className="w-6 h-6" />, title: "Gestão de Clientes", desc: "Cadastro completo com histórico de compras e fidelização." },
-    { icon: <Clock className="w-6 h-6" />, title: "Controle de Ponto", desc: "Registro de entrada e saída dos funcionários com histórico." },
-    { icon: <CreditCard className="w-6 h-6" />, title: "Vales & Caixa", desc: "Controle de vales, despesas e fechamento de caixa diário." },
+    { icon: <Users className="w-6 h-6" />, title: "Gestão Elite", desc: "Recrutamento de Vendedores, Fornecedores e Controle de Cooperados." },
+    { icon: <Clock className="w-6 h-6" />, title: "Terminal Ponto", desc: "Registro de entrada e saída dos funcionários com histórico digital." },
+    { icon: <CreditCard className="w-6 h-6" />, title: "Vales & Caixa", desc: "Abertura, suprimentos, sangrias e emissão de vales antecipados." },
     { icon: <LineChart className="w-6 h-6" />, title: "Relatórios", desc: "Dashboard com gráficos de faturamento, vendas e desempenho." },
-    { icon: <Package className="w-6 h-6" />, title: "Estoque", desc: "Controle de produtos com alertas de estoque baixo." },
+    { icon: <Package className="w-6 h-6" />, title: "Estoque", desc: "Controle de produtos com cadastro de fornecedores estratégicos." },
   ];
 
   const [activePlanTab, setActivePlanTab] = useState<'pdv' | 'crm_pdv' | 'crm_solo' | 'marketing' | 'ads' | 'google'>('pdv');
@@ -233,9 +233,9 @@ export default function App() {
 
   const allPlans: Record<string, any[]> = {
     pdv: [
-      { name: "Básico", price: "79", features: ["Até 3 funcionários", "🛒 PDV com troco e PIX QR Code", "🧾 Pedidos por cliente", "📦 Estoque com alertas", "👥 Cadastro de clientes", "✅ WhatsApp Marketing incluído"], optional: ["🏛️ SEFAZ / NF-e (+R$39/mês)", "🎓 Bônus: Curso Marketing (+R$50 único)"] },
-      { name: "Profissional", price: "149", features: ["Até 10 funcionários", "Tudo do Básico", "📅 Agendamentos online", "⏱️ Controle de Ponto digital", "💰 Vales + Fechamento de Caixa", "📊 Relatórios e painel", "🎯 CRM / Funil de leads", "✅ WhatsApp Marketing incluído"], popular: true, optional: ["🏛️ SEFAZ / NF-e (+R$39/mês)", "🎓 Bônus: Curso Marketing (+R$50 único)"] },
-      { name: "Empresa", price: "299", features: ["Funcionários ilimitados", "Tudo do Profissional", "🏪 Multilojas", "🏛️ SEFAZ / NF-e incluso", "👤 Gerente exclusivo", "🚀 Integração dedicada", "✅ WhatsApp Marketing incluído"] },
+      { name: "Básico", price: "79", features: ["Até 3 funcionários", "🛒 PDV com troco e PIX QR Code", "🧾 Pedidos por cliente", "📦 Estoque + Fornecedores", "👥 Cadastro de clientes", "✅ WhatsApp Marketing incluído"], optional: ["🏛️ SEFAZ / NF-e (+R$39/mês)", "🎓 Bônus: Curso Marketing (+R$50 único)"] },
+      { name: "Profissional", price: "149", features: ["Até 10 funcionários", "Tudo do Básico", "📅 Agendamentos online", "⏱️ Terminal Transacional Ponto", "💰 Abertura/Sangria de Caixa", "🎟️ Emissão de Vales Elite", "📈 Gestão de Vendedores", "📊 Relatórios e painel", "✅ WhatsApp Marketing incluído"], popular: true, optional: ["🏛️ SEFAZ / NF-e (+R$39/mês)", "🎓 Bônus: Curso Marketing (+R$50 único)"] },
+      { name: "Empresa", price: "299", features: ["Funcionários ilimitados", "Tudo do Profissional", "🤝 Fornecedores Estratégicos", "🏪 Multilojas", "🏛️ SEFAZ / NF-e incluso", "👤 Gerente exclusivo", "✅ WhatsApp Marketing incluído"] },
     ],
     crm_pdv: [
       { name: "CRM Starter", price: "59", features: ["200 leads", "Funil de vendas Kanban", "Histórico de interações", "Links WhatsApp", "Etiquetas e prioridade", "PDV básico incluso"], optional: ["🏛️ SEFAZ / NF-e (+R$39/mês)", "🎓 Bônus: Curso Marketing (+R$50 único)"] },

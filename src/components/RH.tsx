@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Clock, UserPlus, Briefcase, Calendar, CheckCircle2, XCircle, Search, MoreVertical, DollarSign, Plus, FileText, Trash2, CheckCircle } from 'lucide-react';
+import { Users, Clock, UserPlus, Briefcase, Calendar, CheckCircle2, XCircle, Search, MoreVertical, DollarSign, Plus, FileText, Trash2, CheckCircle, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Employee {
@@ -34,15 +34,36 @@ const INITIAL_VALES: Voucher[] = [
 ];
 
 export default function RH() {
-  const [activeTab, setActiveTab] = useState<'employees' | 'ponto' | 'vales'>('employees');
+  const [activeTab, setActiveTab] = useState<'employees' | 'ponto' | 'vales' | 'vendedores'>('employees');
   const [employees, setEmployees] = useState<Employee[]>(EMPLOYEES);
   const [vales, setVales] = useState<Voucher[]>(INITIAL_VALES);
   const [showVoucherModal, setShowVoucherModal] = useState<Employee | null>(null);
+  const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+  const [modalRole, setModalRole] = useState('');
   
+  const [newEmployee, setNewEmployee] = useState({
+    name: '',
+    role: ''
+  });
+
   const [newVoucher, setNewVoucher] = useState({
     amount: '',
     reason: ''
   });
+
+  const handleAddEmployee = () => {
+    if (!newEmployee.name) return;
+    const employee: Employee = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: newEmployee.name,
+      role: newEmployee.role || modalRole || 'Colaborador',
+      status: 'offline',
+      lastClockIn: '-'
+    };
+    setEmployees(prev => [employee, ...prev]);
+    setShowEmployeeModal(false);
+    setNewEmployee({ name: '', role: '' });
+  };
 
   const handleCreateVoucher = () => {
     if (!showVoucherModal || !newVoucher.amount) return;
@@ -72,6 +93,7 @@ export default function RH() {
         <div className="flex bg-white/5 p-1 rounded-2xl sm:rounded-full border border-white/5 luxury-gradient flex-col sm:flex-row">
           {[
             { id: 'employees', label: 'Quadro Cooperativo' },
+            { id: 'vendedores', label: 'Gestão Vendedores' },
             { id: 'ponto', label: 'Terminal Transacional' },
             { id: 'vales', label: 'Gestão de Vales' },
           ].map(tab => (
@@ -84,15 +106,31 @@ export default function RH() {
             </button>
           ))}
         </div>
-        <button className="px-8 sm:px-10 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 shadow-2xl shadow-[#c5a059]/20 italic group hover:scale-[1.02] transition-all">
-          <UserPlus className="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" />
-          Vincular Cooperado
-        </button>
+        <div className="flex gap-4">
+          {activeTab === 'vendedores' && (
+            <button 
+              onClick={() => { setModalRole('Vendedor'); setShowEmployeeModal(true); }}
+              className="px-8 sm:px-10 py-5 bg-white/5 text-[#c5a059] border border-[#c5a059]/20 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 shadow-2xl hover:bg-[#c5a059]/10 transition-all italic hover:scale-[1.02]"
+            >
+              <TrendingUp className="w-5 h-5 shrink-0" />
+              Recrutar Vendedor
+            </button>
+          )}
+          <button 
+            onClick={() => { setModalRole(''); setShowEmployeeModal(true); }}
+            className="px-8 sm:px-10 py-5 bg-gradient-to-r from-[#f9d976] to-[#c5a059] text-[#0a0e17] rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 shadow-2xl shadow-[#c5a059]/20 italic group hover:scale-[1.02] transition-all"
+          >
+            <UserPlus className="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" />
+            Vincular Cooperado
+          </button>
+        </div>
       </div>
 
-      {activeTab === 'employees' ? (
+      {activeTab === 'employees' || activeTab === 'vendedores' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {employees.map((employee) => (
+          {employees
+            .filter(e => activeTab === 'vendedores' ? e.role === 'Vendedor' : true)
+            .map((employee) => (
             <div key={employee.id} className="luxury-card p-8 border-white/5 luxury-gradient relative overflow-hidden group hover:border-[#c5a059]/30 transition-all duration-700">
                <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full translate-x-12 -translate-y-12 group-hover:scale-150 transition-transform duration-1000"></div>
                
@@ -297,6 +335,74 @@ export default function RH() {
                   className="w-full py-6 rounded-full font-black uppercase tracking-[0.4em] text-[10px] text-[#0a0e17] transition-all shadow-2xl italic bg-gradient-to-r from-[#f9d976] to-[#c5a059]"
                 >
                   RATIFICAR BENEFÍCIO
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+      {/* Modal Cadastro de Cooperado */}
+      <AnimatePresence>
+        {showEmployeeModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+               initial={{ opacity: 0 }} 
+               animate={{ opacity: 1 }} 
+               exit={{ opacity: 0 }}
+               onClick={() => setShowEmployeeModal(false)}
+               className="absolute inset-0 bg-[#05080d]/80 backdrop-blur-md"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-md bg-[#0a0e17] rounded-[3rem] border border-white/10 overflow-hidden shadow-2xl luxury-gradient"
+            >
+              <div className="p-10 bg-[#c5a059]/10 text-white border-b border-white/5">
+                 <div className="flex justify-between items-start mb-8">
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center border bg-[#c5a059]/20 text-[#c5a059] border-[#c5a059]/30">
+                       <UserPlus className="w-7 h-7" />
+                    </div>
+                    <button onClick={() => setShowEmployeeModal(false)} className="p-3 hover:bg-white/10 rounded-full transition-colors"><XCircle className="w-6 h-6 text-white/20" /></button>
+                 </div>
+                 <h3 className="text-3xl font-serif italic font-black uppercase tracking-tighter gold-text">
+                   {modalRole === 'Vendedor' ? 'Recrutar Vendedor Elite' : 'Vincular Novo Cooperado'}
+                 </h3>
+              </div>
+
+              <div className="p-10 space-y-8">
+                <div>
+                  <label className="text-[10px] font-black uppercase text-white/20 tracking-[0.4em] mb-4 block italic">Nome Completo do Talento</label>
+                  <input 
+                    type="text" 
+                    placeholder="EX: GABRIEL MEDEIROS" 
+                    className="w-full p-5 bg-white/5 rounded-2xl border border-white/5 font-black text-white focus:border-[#c5a059]/30 outline-none transition-all text-xs tracking-widest placeholder:text-white/10 uppercase italic" 
+                    value={newEmployee.name}
+                    onChange={e => setNewEmployee({...newEmployee, name: e.target.value})}
+                  />
+                </div>
+                {!modalRole && (
+                  <div>
+                    <label className="text-[10px] font-black uppercase text-white/20 tracking-[0.4em] mb-4 block italic">Função Estratégica</label>
+                    <select 
+                      className="w-full p-5 bg-white/5 rounded-2xl border border-white/5 font-black text-white/60 focus:border-[#c5a059]/30 outline-none transition-all text-xs tracking-widest uppercase italic appearance-none cursor-pointer"
+                      value={newEmployee.role}
+                      onChange={e => setNewEmployee({...newEmployee, role: e.target.value})}
+                    >
+                       <option value="" className="bg-[#0a0e17]">Selecionar Função...</option>
+                       <option value="Vendedor" className="bg-[#0a0e17]">Vendedor Elite</option>
+                       <option value="Esteticista" className="bg-[#0a0e17]">Esteticista</option>
+                       <option value="Gerente" className="bg-[#0a0e17]">Gestão Master</option>
+                       <option value="Recepcionista" className="bg-[#0a0e17]">Recepcionista</option>
+                    </select>
+                  </div>
+                )}
+
+                <button 
+                  onClick={handleAddEmployee}
+                  className="w-full py-6 rounded-full font-black uppercase tracking-[0.4em] text-[10px] text-[#0a0e17] transition-all shadow-2xl italic bg-gradient-to-r from-[#f9d976] to-[#c5a059]"
+                >
+                  RATIFICAR VÍNCULO
                 </button>
               </div>
             </motion.div>
