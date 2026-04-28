@@ -58,6 +58,7 @@ import Financeiro from './components/Financeiro';
 import RH from './components/RH';
 import Agenda from './components/Agenda';
 import Clientes from './components/Clientes';
+import Market from './components/Market';
 
 // Types
 type Section = 
@@ -86,10 +87,19 @@ type Section =
   | 'privacy'
   | 'signup'
   | 'caixa'
+  | 'market'
   | 'login';
 
 export default function App() {
-  const [currentSection, setCurrentSection] = useState<Section>('landing');
+  const [currentSection, setCurrentSection] = useState<Section>(() => {
+    const saved = localStorage.getItem('currentSection');
+    return (saved as Section) || 'landing';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('currentSection', currentSection);
+  }, [currentSection]);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [isGeneratingPayment, setIsGeneratingPayment] = useState(false);
@@ -913,6 +923,7 @@ export default function App() {
                   { id: 'agenda', icon: <Calendar className="w-5 h-5" />, label: 'Reservas' },
                   { id: 'finance', icon: <DollarSign className="w-5 h-5" />, label: 'Capital' },
                   { id: 'caixa', icon: <Landmark className="w-5 h-5" />, label: 'Caixa / Fluxo' },
+                  { id: 'market', icon: <TrendingUp className="w-5 h-5" />, label: 'Mercado / Câmbio' },
                   { id: 'ponto', icon: <Clock className="w-5 h-5" />, label: 'Relojoeiro / RH' },
                   { id: 'vales', icon: <CreditCard className="w-5 h-5" />, label: 'Protocolos' },
                 ].map((item) => (
@@ -1156,6 +1167,7 @@ export default function App() {
                  )}
                  {currentSection === 'finance' && <Financeiro />}
                  {currentSection === 'caixa' && <Financeiro />}
+                 {currentSection === 'market' && <Market />}
                  {currentSection === 'solutions' && (
                    <div className="space-y-12">
                      <div className="flex flex-col">
