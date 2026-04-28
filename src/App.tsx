@@ -85,6 +85,7 @@ type Section =
   | 'indication'
   | 'privacy'
   | 'signup'
+  | 'caixa'
   | 'login';
 
 export default function App() {
@@ -911,6 +912,7 @@ export default function App() {
                 {[
                   { id: 'agenda', icon: <Calendar className="w-5 h-5" />, label: 'Reservas' },
                   { id: 'finance', icon: <DollarSign className="w-5 h-5" />, label: 'Capital' },
+                  { id: 'caixa', icon: <Landmark className="w-5 h-5" />, label: 'Caixa / Fluxo' },
                   { id: 'ponto', icon: <Clock className="w-5 h-5" />, label: 'Relojoeiro / RH' },
                   { id: 'vales', icon: <CreditCard className="w-5 h-5" />, label: 'Protocolos' },
                 ].map((item) => (
@@ -1153,6 +1155,7 @@ export default function App() {
                     </div>
                  )}
                  {currentSection === 'finance' && <Financeiro />}
+                 {currentSection === 'caixa' && <Financeiro />}
                  {currentSection === 'solutions' && (
                    <div className="space-y-12">
                      <div className="flex flex-col">
